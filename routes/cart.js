@@ -6,6 +6,8 @@ const mysqlConn= require('../conn/conn');
 const bodyParser = require('body-parser');
 const router = express.Router();
 
+
+//const router=express.Router();
 //Update cart qty
 router.post('/update',function(req,res){
   var item_name = req.body.item_name;

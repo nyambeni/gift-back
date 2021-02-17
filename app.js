@@ -18,13 +18,13 @@ app.use(function (req, res, next) {
   });
 
   // api routes
- app.use('/', require('./routes/register'));
- app.use('/', require('./routes/login'));
- app.use('/', require('./routes/admin'));
+ app.use('/auth', require('./routes/register'));
+ app.use('/login', require('./routes/login'));
+ app.use('/admin', require('./routes/admin'));
  app.use('/', require('./routes/index'));
- app.use('/', require('./routes/cart'));
- app.use('/', require('./routes/wishlist'));
- app.use('/', require('./routes/orders'));
+ app.use('/addcart', require('./routes/cart'));
+ app.use('/addwishlist', require('./routes/wishlist'));
+ app.use('/addordes', require('./routes/orders'));
 
 
 

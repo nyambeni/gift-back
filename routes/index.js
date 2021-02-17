@@ -26,7 +26,7 @@ router.get('/search', function(req,res){
 });
 
 //searching  for categories using like % vale % "working"
-router.get('/searchc', function(req,res){
+router.get('/search', function(req,res){
 
     var product_category = req.body.product_category;
     var myQuery = "SELECT * FROM product WHERE product_category LIKE '%" + product_category + "%' ORDER BY  product_category DESC LIMIT 4";
