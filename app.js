@@ -1,36 +1,22 @@
-const mysql = require('mysql');
-const express = require('express');
-const app = express(); 
-var cors = require('cors');
-const mysqlConn= require('./conn/conn');
-const bodyParser = require('body-parser');
-const router = express.Router();
+var mysql = require('mysql');
+var express = require('express');
+//var session = require('express-session');
+var fileapload = require('express-fileupload');
+var bodyParser = require('body-parser');
+var path = require('./routes/admin');
+const Login=require('./routes/login');
+const customer_register=require('./routes/register');
+//const upload = require('./imageUpload');
 
+var port = process.env.PORT || 3000;      
+var app = express();
+app.use('admin',path);
+app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(fileapload());
 
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST,GET,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Accept');
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    next();
-  });
+app.use('/register',customer_register);
+app.use('/login',Login);
 
-  // api routes
- app.use('/auth', require('./routes/register'));
- app.use('/login', require('./routes/login'));
- app.use('/admin', require('./routes/admin'));
- app.use('/', require('./routes/index'));
- app.use('/addcart', require('./routes/cart'));
- app.use('/addwishlist', require('./routes/wishlist'));
- app.use('/addordes', require('./routes/orders'));
- //app.use('/upload', require('../gift-back/routes/imageUpload'));
 
- // start server
-const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 7777) : 5000;
-const server = app.listen(port, function () {
-    console.log('Server listening on port ' + port);
-});
-
-module.exports = router;
+app.listen(port, () => console.log('Go to localhost:' + port));
