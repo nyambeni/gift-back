@@ -69,9 +69,4 @@ router.delete('/delete/:name',function(req,res){
 });
 
 
-
-
-
-
-
 module.exports = router;
