@@ -1,28 +1,45 @@
 {
-  "name": "GiftBox-Back-End",
+  "name": "gift-box",
   "version": "1.0.0",
-  "description": "",
+  "description": "on backend npm i -s express cors jsonwebtoken mysql",
   "main": "app.js",
   "scripts": {
+<<<<<<< Updated upstream
     "test": "echo \"Error: no test specified\" && exit 1",
 
     "start": "nodemon app"
 
+=======
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lethi-nks/gift-box.git"
+>>>>>>> Stashed changes
+  },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lethi-nks/gift-box/issues"
+  },
+  "homepage": "https://github.com/lethi-nks/gift-box#readme",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "cart": "^1.0.4",
-    "connect": "^3.7.0",
+    "bcrypt": "^5.0.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+<<<<<<< Updated upstream
     "express-session": "^1.17.0",
 
+=======
+    "express-fileupload": "^1.2.1",
+    "fileupload": "^1.0.0",
+>>>>>>> Stashed changes
     "jsonwebtoken": "^8.5.1",
 
     "mysql": "^2.18.1",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.7"
   }
 }

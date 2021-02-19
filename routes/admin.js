@@ -1,11 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const mysql = require('mysql');
-const  db = require('../conn/conn');
-const bodyparser = require('body-parser');
+var mysql = require('mysql');
+var express = require('express');
+var auth = require('../controllers/auth');
+//var auth = require('../imageUpload');
+//var session = require('express-session');
+var bodyParser = require('body-parser');
+var conn = require('../config/conn_db');
+var router=express.Router();
 
-router.post('/admin',function(req,res){
-    res.send('admin');
-});
-
-module.exports = router ;
+module.exports = router;
