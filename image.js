@@ -1,7 +1,7 @@
 var express = require('express');
 
 var mysql = require('mysql');
-var sql = require("mssql");
+//var sql = require("mssql");
 var cors = require('cors')
 
 
