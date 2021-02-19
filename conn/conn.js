@@ -8,7 +8,7 @@ const mysqlConn =mysql.createConnection({
   host:'localhost',
   user:'root',
   password:'',
-  database:'giftbox',
+  database:'giftbox_db',
   multipleStatements: true
 
 })
@@ -24,7 +24,7 @@ console.log('db connection succeed');
 else
 
 
-console.log('db connection failed');
+console.log('db connection failed' +err);
 
 
 });
