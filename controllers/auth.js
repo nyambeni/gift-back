@@ -32,16 +32,20 @@ exports.customer_register=(req,res)=>{
         let hashedPassword= await bcrypt.hash(password,8);
         console.log(hashedPassword);
 
+       const auth={firstname:firstname,lastname:lastname,email:email,password: hashedPassword}
+       
       const myquery2='INSERT INTO customer SET ?'
-        connection.conn.query(myquery2,{firstname:firstname,lastname:lastname,email:email,password: hashedPassword},(error,rows,fields)=>
+        connection.conn.query(myquery2,auth,(error,rows,fields)=>
         {
             if(error)
             {
                 console.log(error);
             }
             else{
-                console.log(rows);
-                res.status(200).send('user registered in the database');
+                //console.log(rows);
+                const exp={firstname:firstname,lastname:lastname,email:email}
+                const semail={email:email}
+                res.status(200).send({data:exp,message:'email registered in the database'});
             }
         })
 

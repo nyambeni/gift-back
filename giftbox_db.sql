@@ -135,7 +135,7 @@ CREATE TABLE `cart` (
   `price` double  NOT NULL,
   `description` varchar(255)  NOT NULL,
   `qty` int(11)  NOT NULL,
-  `totalPrice` double GENERATED ALWAYS AS (`price` * `qty`) VIRTUAL
+ `totalPrice` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 -- --------------------------------------------------------
 
@@ -149,7 +149,7 @@ CREATE TABLE `wishlist` (
   `price` double DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `qty` int(11) DEFAULT NULL,
-  `totalPrice` double GENERATED ALWAYS AS (`price` * `qty`) VIRTUAL
+  `totalPrice` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -210,7 +210,7 @@ ALTER TABLE `report`
 -- Indexes for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  ADD PRIMARY KEY (`wish_id`),
+  ADD PRIMARY KEY (`id`);,
   ADD KEY `admin_id` (`admin_id`),
   ADD KEY `item_id` (`item_id`);
 
@@ -264,7 +264,7 @@ ALTER TABLE `report`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `wish_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -6,69 +6,52 @@ const mysqlConn= require('../config/conn_db');
 const bodyParser = require('body-parser');
 const router = express.Router();
 
-//Add to wishlist
-router.post('/addwishlist',function(req,res){
-  
+//adding to wish list
+router.post('/addwishlist',(req,res)=>{
 
-    var post = {
-        name:req.body.name,
-        price:req.body.price,
-        description:req.body.description,
-        qty:req.body.qty,
-    };
+    const {name,price,description,qty,totalPrice}=req.body;
+    const custwishlist='SELECT name FROM wishlist ';
+    mysqlConn.conn.query(custwishlist,[name],(error,rows)=>{
 
-
-
-    var name = req.body.name;
-    var myQuery1 = "SELECT * FROM wishlist WHERE name = ?";
-    mysqlConn.query(myQuery1,[name],function(err,results){
-        
-        if(results.length > 0){
-
-            res.send({
-                data : results,
-                code : 401,
-                message : "Sorry, item already exist in the wishlist !!!"
-
-            })
-
-        }else{
-                var myQuery = "INSERT INTO wishlist SET ?";
-                mysqlConn.query(myQuery, [post], function(err, results){
-                    if(err){
-                        
-                        return res.send({
-                            data : err,
-                            code : 400,
-                            message : "The was an error !!!"
-                        });
-                            
-                    }else{
-                        
-                        return res.send({
-                            data : results,
-                            code : 200,
-                            message : "Added Wishlist To Successfully..."
-            
-                        })
-                    }
-            })
+        if(error)
+        {
+            console.log(error)
         }
-        
+        if(rows.length>0)
+        {
+            return res.status(401).send('item already added to wish list');
+        }else{
+
+            const values={name:name,price:price,description:description,qty:qty,totalPrice:totalPrice};
+            const query1='INSERT INTO wishlist SET ?';
+            mysqlConn.conn.query(query1,values,(error,results)=>{
+                if(error)
+                {
+                    console.log(error)
+                }else{
+                    res.status(200).send({data:values,message:'added to wishlist'})
+                }
+            })
+
+        }
+
     })
-});
 
-//Remove  from wishlist 
+
+})
+//removing the item from the wish list
+
+
+
 router.delete('/delete/:name',function(req,res){
-  var sQL1 = 'DELETE FROM cart_det WHERE name= ?';
-  mysqlConn.query(sQL1,[req.params.name],(err,rows,fields)=>{
-    if(!err)
-        res.send('Deleted successfully');
-    else
-        console.log(err);
-  })
-});
-
+    var sQL1 = 'DELETE FROM cart WHERE name= ?';
+    mysqlConn.query(sQL1,[req.params.name],(err,rows,fields)=>{
+      if(!err)
+          res.send('Deleted successfully');
+      else
+          console.log(err);
+    })
+  });
 
 //adding to cart 
 router.post('/addcart',(req,res)=>{
@@ -76,8 +59,9 @@ router.post('/addcart',(req,res)=>{
 
     const {item_name,price,description,qty,totalPrice}=req.body;
     const myQuery="SELECT * FROM cart WHERE item_name= ? ";
+    
 
-    connection.conn.query(myQuery,[item_name],async(error,rows,fields)=>{
+    mysqlConn.conn.query(myQuery,[item_name],(error,rows,fields)=>{
 
         if(error)
         {
@@ -85,20 +69,24 @@ router.post('/addcart',(req,res)=>{
         }
         if(rows.length>0)
         {
-           return res.send('item already added to cart');
+           return res.status(401).send('item already added to cart');
         }
          
             const myquery2='INSERT INTO cart SET ?';
+            //add where customer id =?
             const post={item_name:item_name,price:price,description:description,qty:qty,totalPrice:totalPrice};
-            connection.conn.query(myquery2,post,(error,rows,fields)=>
+            mysqlConn.conn.query(myquery2,post,(error,results)=>
             {
                 if(error)
                 {
                     console.log(error);
-                }
+                    
+                 }
                 else{
-                    console.log(rows);
-                    res.status(200).send('item added to cart');
+                    
+
+                   // console.log(rows);
+                    res.send({data:post,message:' added to the database'});
                 }
             })
         
@@ -114,7 +102,7 @@ router.post('/addcart',(req,res)=>{
 router.delete('/delete/:name',(req,res)=>{
 
   const del='DELETE FROM cart WHERE item_name= ?';
-  connection.conn.query(del,[req.params.item_name],(error,rows)=>{
+  mysqlConn.conn.query(del,[req.params.item_name],(error,rows)=>{
       if(!error)
       {
           res.send('cart deleted successfully')
@@ -123,6 +111,24 @@ router.delete('/delete/:name',(req,res)=>{
 
 })
 
+
+
+//view wish list
+app.get('/viewlist',(req,res)=>{
+
+    const view="SELECT * FROM wishlist";
+    //add the user table 
+    mysqlConn.conn.query(view,(error,results)=>{
+        if(error)
+        {
+            console.log(error);
+        }
+        else{
+            res.send(results)
+        }
+    })
+
+})
 
 
 
