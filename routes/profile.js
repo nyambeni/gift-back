@@ -8,11 +8,11 @@ const router = express.Router();
 
 
 //customer profile
-router.post('/cprofile/:id',(req,res)=>{
+router.get('/cprofile',(req,res)=>{
 
-    const cProfile='SELECT * FROM customer where cust_id = ? ';
-    const c_id=[req.params.cust_id];
-    mysqlConn.conn.query(cProfile,c_id,(error,results)=>{
+    const cProfile='SELECT * FROM customer';
+    //const c_id=[req.params.cust_id];
+    mysqlConn.conn.query(cProfile,(error,results)=>{
         if(error)
         {
             console.log(error);
@@ -20,6 +20,30 @@ router.post('/cprofile/:id',(req,res)=>{
             res.send(results);
         }
     })
+
+
+})
+
+//update profile 
+router.put('/update/:id',(req,res)=>{
+
+   const post ={firstname ,lastname,email}=req.body;
+ const upd='UPDATE customer SET ? WHERE cust_id= ? ';
+
+// const post={firstname:firstname,lastname:lastname,email:email};
+
+ mysqlConn.conn.query(upd,[post,req.params.id],(error,rows)=>{
+
+    if(error)
+    {
+        throw error;
+    }
+    else
+    {
+        res.status(200).send('profile has been successfully updated');
+    }
+ })
+
 
 
 })
