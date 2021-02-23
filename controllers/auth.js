@@ -13,9 +13,9 @@ exports.customer_register=(req,res)=>{
 
     
 
-    const {firstname,lastname,email,password,passwordconfirm}=req.body;
-    const myquery='SELECT email FROM customer WHERE email = ?';
-    connection.conn.query(myquery,[email],async(error,rows,fields)=>{
+    const {firstname,lastname,emailAddress: emailAddress,password}=req.body;
+    const myquery='SELECT emailAddress FROM customer WHERE emailAddress = ?';
+    connection.conn.query(myquery,[emailAddress],async(error,rows,fields)=>{
 
         if(error)
         {
@@ -25,14 +25,9 @@ exports.customer_register=(req,res)=>{
         {
            return res.send('email already registered');
         }
-        else if (password!==passwordconfirm)
-        {
-           return res.send('password entered does not match');
-        }
-        let hashedPassword= await bcrypt.hash(password,8);
-        console.log(hashedPassword);
+       
 
-       const auth={firstname:firstname,lastname:lastname,email:email,password: hashedPassword}
+       const auth={firstname:firstname,lastname:lastname,emailAddress:emailAddress,password:password}
        
       const myquery2='INSERT INTO customer SET ?'
         connection.conn.query(myquery2,auth,(error,rows,fields)=>
@@ -43,8 +38,8 @@ exports.customer_register=(req,res)=>{
             }
             else{
                 //console.log(rows);
-                const exp={firstname:firstname,lastname:lastname,email:email}
-                const semail={email:email}
+                const exp={firstname:firstname,lastname:lastname,emailAddress:emailAddress,password:password}
+              //  const semail={email:emailAddress}
                 res.status(200).send({data:exp,message:'email registered in the database'});
             }
         })
@@ -106,7 +101,7 @@ module.exports.AdminLogin=(req, res, next) => {
   
 //customer login
 module.exports.customer_login=(req, res, next) => {
-  connection.conn.query('SELECT * FROM customer WHERE email = ?',[req.body.email],(err, result) => {
+  connection.conn.query('SELECT * FROM customer WHERE emailAddress = ?',[req.body.email],(err, result) => {
       // user does not exists
       if (err) {
         throw err;
@@ -119,7 +114,7 @@ module.exports.customer_login=(req, res, next) => {
       );
       }
       // check password
-      bcrypt.compare( req.body.password, result[0]['password'],
+      ( req.body.password, result[0]['password'],
         (bErr, bResult) => {
           // wrong password
           if (bErr) {

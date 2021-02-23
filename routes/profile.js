@@ -49,5 +49,28 @@ router.put('/update/:id',(req,res)=>{
 })
 
 
+router.delete('/update/:id',(req,res)=>{
+
+  const upd='DELETE FROM customer  WHERE cust_id= ? ';
+ 
+ // const post={firstname:firstname,lastname:lastname,email:email};
+ 
+  mysqlConn.conn.query(upd,[req.params.id],(error,rows)=>{
+ 
+     if(error)
+     {
+         throw error;
+     }
+     else
+     {
+         res.status(200).send('Account has been deleted');
+     }
+  })
+ 
+ 
+ 
+ })
+
+
 
 module.exports = router;
