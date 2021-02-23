@@ -66,4 +66,66 @@ router.get('/searchDropbox', function(req,res){
     })
 });
 
+router.get('/viewItems', (req,res) => {
+    var item_category = req.body.category;
+    var query = "SELECT * FROM item";
+    mysqlConn.query(query, (err,results) => {
+
+        if(err)
+        {
+            res.send(err);
+        }
+        else{
+            console.log(results);
+            res.send(results);
+        }
+    })
+
+})
+
+router.get('/viewItem/:category', (req,res) => {
+    var item_category = req.params.category;
+    var query = "SELECT * FROM item WHERE category = ?";
+    mysqlConn.query(query,[item_category], (err,results) => {
+
+        if(err)
+        {
+            res.send(err);
+        }
+        else{
+            console.log(results);
+            res.send(results);
+        }
+    })
+
+})
+
+router.post('/payment', (req, res) => {
+    var totalprice = req.body.totalPrice;
+    var custId = req.body.custId;
+    var admin = "5432";
+    var value = [totalprice, custId,admin];
+    //to get the users cust_id we gonna use the token of the user who has login
+
+    var query = "INSERT INTO `payment`(`total_price`, `cust_id`, `admin_id`) VALUES (?,?,?)";
+    mysqlConn.query(query,value, (err,results)=>
+    {
+        if(err)
+        {
+            res.send(err);
+        }
+        else
+        {
+            res.send({
+                data :value,
+                code : 200,
+                message : "Registered Successfully..."
+            })
+        }
+       
+    })
+    
+})
+
+
 module.exports = router;
