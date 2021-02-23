@@ -26,8 +26,8 @@ exports.customer_register=(req,res)=>{
            return res.send('email already registered');
         }
        
-
-       const auth={firstname:firstname,lastname:lastname,emailAddress:emailAddress,password:password}
+        let hashedPassword= await bcrypt.hash(password,8);
+       const auth={firstname:firstname,lastname:lastname,emailAddress:emailAddress,password:hashedPassword}
        
       const myquery2='INSERT INTO customer SET ?'
         connection.conn.query(myquery2,auth,(error,rows,fields)=>
@@ -38,7 +38,7 @@ exports.customer_register=(req,res)=>{
             }
             else{
                 //console.log(rows);
-                const exp={firstname:firstname,lastname:lastname,emailAddress:emailAddress,password:password}
+                const exp={firstname:firstname,lastname:lastname,emailAddress:emailAddress,password:hashedPassword}
               //  const semail={email:emailAddress}
                 res.status(200).send({data:exp,message:'email registered in the database'});
             }
@@ -101,7 +101,7 @@ module.exports.AdminLogin=(req, res, next) => {
   
 //customer login
 module.exports.customer_login=(req, res, next) => {
-  connection.conn.query('SELECT * FROM customer WHERE emailAddress = ?',[req.body.email],(err, result) => {
+  connection.conn.query('SELECT * FROM customer WHERE emailAddress = ?',[req.body.emailAddress],(err, result) => {
       // user does not exists
       if (err) {
         throw err;
@@ -114,7 +114,7 @@ module.exports.customer_login=(req, res, next) => {
       );
       }
       // check password
-      ( req.body.password, result[0]['password'],
+      bcrypt.compare( req.body.password, result[0]['password'],
         (bErr, bResult) => {
           // wrong password
           if (bErr) {
