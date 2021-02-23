@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const router = express.Router();
 
 
-//customer profile
+//for admin profile
 router.get('/cprofile',(req,res)=>{
 
     const cProfile='SELECT * FROM customer';
@@ -23,7 +23,25 @@ router.get('/cprofile',(req,res)=>{
 
 
 })
+///customer profile
+router.get('/profile/:id',(req,res)=>{
 
+    const cProfile='SELECT * FROM customer WHERE cust_id= ?';
+    const post=[req.params.id]
+    //const c_id=[req.params.cust_id];
+    mysqlConn.conn.query(cProfile,post,(error,results)=>{
+        if(error)
+        {
+            console.log(error);
+        }else{
+           // const exp={firstname:firstname,lastname:lastname,emailAddress:emailAddress,password:hashedPassword}
+            //  const semail={email:emailAddress}
+              res.status(200).send({user:results});
+        }
+    })
+
+
+})
 //update profile 
 router.put('/update/:id',(req,res)=>{
 
@@ -49,7 +67,7 @@ router.put('/update/:id',(req,res)=>{
 })
 
 
-router.delete('/update/:id',(req,res)=>{
+router.delete('/delaccount/:id',(req,res)=>{
 
   const upd='DELETE FROM customer  WHERE cust_id= ? ';
  
