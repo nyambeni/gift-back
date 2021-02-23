@@ -10,7 +10,7 @@ const router = express.Router();
 router.post('/addwishlist',(req,res)=>{
 
     const {name,price,description,qty,totalPrice}=req.body;
-    const custwishlist='SELECT name FROM wishlist ';
+    const custwishlist='SELECT  name FROM wishlist ';
     mysqlConn.conn.query(custwishlist,[name],(error,rows)=>{
 
         if(error)
@@ -44,7 +44,7 @@ router.post('/addwishlist',(req,res)=>{
 
 
 router.delete('/delete/:name',function(req,res){
-    var sQL1 = 'DELETE FROM cart WHERE name= ?';
+    var sQL1 = 'DELETE FROM wishlist WHERE name= ?';
     mysqlConn.query(sQL1,[req.params.name],(err,rows,fields)=>{
       if(!err)
           res.send('Deleted successfully');
