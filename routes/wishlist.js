@@ -8,8 +8,6 @@ const router = express.Router();
 
 //Add to wishlist
 router.post('/addw',function(req,res){
-  
-
     var post = {
         name:req.body.name,
         price:req.body.price,
@@ -67,11 +65,5 @@ router.delete('/delete/:name',function(req,res){
         console.log(err);
   })
 });
-
-
-
-
-
-
 
 module.exports = router;

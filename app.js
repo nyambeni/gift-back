@@ -8,10 +8,12 @@ const Login=require('./routes/login');
 const customer_register=require('./routes/register');
 const customer_file=require('./routes/customer');
 const caprofile=require('./routes/profile');
+const cors = require('cors');
 //const upload = require('./imageUpload');
 
 var port = process.env.PORT || 3000;      
 var app = express();
+app.use(cors());
 app.use('admin',path);
 var bodyParser = require('body-parser');  
 var jsonParser = bodyParser.json();

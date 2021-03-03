@@ -30,7 +30,7 @@ router.post ('/insert', function(req,res){
 })
 
 
-
+//API to get and view orders
  router.get ('/allOrders', function(req,res){
        
          sqlconn.query("select * from orders", function(error, results) {
@@ -40,7 +40,7 @@ router.post ('/insert', function(req,res){
        });  
   })
 
-//Delete an seller
+//Delete an order
 router.delete('/t/:order_id',(req,res)=>{
   sqlconn.query('DELETE FROM orders WHERE order_id = ?',[req.params.order_id],(err,rows,fields)=>{
       if(!err)

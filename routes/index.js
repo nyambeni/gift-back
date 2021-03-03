@@ -66,6 +66,7 @@ router.get('/searchDropbox', function(req,res){
     })
 });
 
+//API to get items
 router.get('/viewItems', (req,res) => {
     var item_category = req.body.category;
     var query = "SELECT * FROM item";
@@ -83,6 +84,7 @@ router.get('/viewItems', (req,res) => {
 
 })
 
+//API to view items by category
 router.get('/viewItem/:category', (req,res) => {
     var item_category = req.params.category;
     var query = "SELECT * FROM item WHERE category = ?";
@@ -99,8 +101,6 @@ router.get('/viewItem/:category', (req,res) => {
     })
 
 })
-
-
 
 
 module.exports = router;

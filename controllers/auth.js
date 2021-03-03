@@ -44,52 +44,7 @@ res.send(results)
 
 }
 
-//registering a customer to the database
-/*exports.customer_register=(req,res)=>{
 
-
-
-const {firstname,lastname,email,password,passwordconfirm}=req.body;
-const admin_id = "5432";
-const myquery='SELECT email FROM customer WHERE email = ?';
-connection.conn.query(myquery,[email],async(error,rows,fields)=>{
-
-if(error)
-{
-console.log(error);
-}
-if(rows.length>0)
-{
-return res.send('email already registered');
-}
-else if (password!==passwordconfirm)
-{
-return res.send('password entered does not match');
-}
-
-
-let hashedPassword= await bcrypt.hash(password,8);
-console.log(hashedPassword);
-var response = await promisedFunction().catch((err) => { console.error(err); });
-
-const auth={firstname:firstname,lastname:lastname,email:email,password: hashedPassword,admin_id:admin_id}
-
-const myquery2='INSERT INTO customer SET ?'
-connection.conn.query(myquery2,auth,(error,rows,fields)=>
-{
-if(error)
-{
-console.log(error);
-}
-else{
-//console.log(rows);
-const exp={firstname:firstname,lastname:lastname,email:email}
-const semail={email:email}
-res.status(200).send({data:exp,message:'email registered in the database'});
-}
-})
-})
-}**/
 
 //this is for the admin login
 
