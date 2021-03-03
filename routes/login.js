@@ -7,8 +7,7 @@ const router=express.Router();
 
 //not fully functioning
 router.post('/admin',authController.AdminLogin);
-//router.post('/admin',imageUpload.upload);
-//router.post('/customer',authController.Authent);
+router.post('/customer',authController.customer_login);
 
 
 module.exports=router;

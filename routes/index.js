@@ -66,4 +66,41 @@ router.get('/searchDropbox', function(req,res){
     })
 });
 
+router.get('/viewItems', (req,res) => {
+    var item_category = req.body.category;
+    var query = "SELECT * FROM item";
+    mysqlConn.query(query, (err,results) => {
+
+        if(err)
+        {
+            res.send(err);
+        }
+        else{
+            console.log(results);
+            res.send(results);
+        }
+    })
+
+})
+
+router.get('/viewItem/:category', (req,res) => {
+    var item_category = req.params.category;
+    var query = "SELECT * FROM item WHERE category = ?";
+    mysqlConn.query(query,[item_category], (err,results) => {
+
+        if(err)
+        {
+            res.send(err);
+        }
+        else{
+            console.log(results);
+            res.send(results);
+        }
+    })
+
+})
+
+
+
+
 module.exports = router;
