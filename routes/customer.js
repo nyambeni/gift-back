@@ -7,10 +7,10 @@ const bodyParser = require('body-parser');
 const router = express.Router();
 
 //adding to wish list
+// ....localhost:3000/addwishlist
 router.post('/addwishlist',(req,res)=>{
 const {item_title,total_price,cust_id,item_description}=req.body;
 
-//const admin_id = "5432";
 const custwishlist='SELECT * FROM wishlist WHERE item_title=?';
 mysqlConn.conn.query(custwishlist,[item_title],(error,rows)=>{
 
@@ -20,7 +20,9 @@ console.log(error)
 
 }
 if(rows.length>0){
+
 return res.status(401).send('item already added to wish list');
+
 }
 else{
 // INSERT INTO `wishlist`(`wish_id`, `item_title`, `price`, `admin_id`
@@ -38,9 +40,9 @@ res.status(200).send({data:values,message:'added to wishlist'})
 })})
 
 //removing the item from the wish list
-router.post('/deletewishlist:/title',(req,res)=>{
+router.delete('/deletewishlist/:title',(req,res)=>{
 var sQL1 = 'DELETE FROM `wishlist` WHERE `item_title` = ?';
-mysqlConn.query(sQL1,[req.params.title],(err,rows,fields)=>{
+mysqlConn.conn.query(sQL1,[req.params.title],(err,rows,fields)=>{
 if(!err)
 res.send('Deleted successfully');
 else
@@ -49,6 +51,7 @@ console.log(err);
 })
 
 //TO VIEW A CUSTOMERS WISHLIST
+//localhost:3000/customer/viewWishlist/cunumber
 router.get('/viewWishlist/:custId',function(req,res){
 var custId = req.params.custId;
 var sql1 = "SELECT * FROM `wishlist` WHERE cust_id = ?";
@@ -59,31 +62,12 @@ res.send(err);
 }
 else{
 res.send({data:rows});
-console.log("Info collected"+results);
+console.log({data:results});
 }
 })
 })
 
-//delete from cart
-router.delete('/delete/:name',function(req,res){
-var sQL1 = 'DELETE FROM wishlist WHERE item_title= ?';
-mysqlConn.conn.query(sQL1,[req.params.name],(err,rows,fields)=>{
-if(!err)
-res.send('Deleted successfully');
-else
-console.log(err);
-})
-});
-
-router.delete('/delete/:name',(req,res)=>{
-const del='DELETE FROM cart WHERE item_name= ?';
-mysqlConn.conn.query(del,[req.params.item_name],(error,rows)=>{
-if(!error){
-res.send('cart deleted successfully')
-}
-})})
-
-
+//
 //view wish list
 app.get('/viewlist',(req,res)=>{
 const view="SELECT * FROM wishlist";
@@ -99,7 +83,7 @@ res.send(results)
 
 //Add to Order 
 router.post('/order', (req,res)=>{
-var cust_id = req.body.custId;
+var cust_id = req.body.cust_id;
 var item_title = req.body.item_title;
 var address = req.body.address;
 var totalPrice = req.body.totalPrice
@@ -112,7 +96,7 @@ console.log(error);
 }
 else{
 console.log(rows);
-res.status(200).send('Order recorded');
+res.status(200).send({data:post,message:'Order recorded in the database'});
 }})
 })
 
@@ -139,7 +123,7 @@ var admin = "5432";
 var value = [totalprice, cust_id,admin];
 //REMINDER TO LETHI to get the users cust_id we gonna use the token of the user who has login
 var query = "INSERT INTO `payment`(`total_price`, `cust_id`, `admin_id`) VALUES (?,?,?)";
-mysqlConn.query(query,value, (err,results)=>{
+mysqlConn.query(query,value, (err,results)=>{s
 if(err){
 res.send(err);
 }
