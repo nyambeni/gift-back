@@ -13,7 +13,7 @@ exports.customer_register=(req,res)=>{
 
     
 
-    const {firstname,lastname,emailAddress: emailAddress,password}=req.body;
+    const {firstname,lastname,emailAddress,password}=req.body;
     const myquery='SELECT emailAddress FROM customer WHERE emailAddress = ?';
     connection.conn.query(myquery,[emailAddress],async(error,rows,fields)=>{
 
