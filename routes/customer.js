@@ -81,15 +81,24 @@ res.send(results)
 }
 })})
 
+
 //Add to Order 
 router.post('/order', (req,res)=>{
 var cust_id = req.body.cust_id;
 var item_title = req.body.item_title;
-var address = req.body.address;
-var totalPrice = req.body.totalPrice
-const post=[cust_id,item_title, address,totalPrice];
+var totalPrice = req.body.totalPrice;
+var citySuburb = req.body.citySuburb;
+var name = req.body.name;
+var phoneNumber = req.body.phoneNumber;
+var postalCode = req.body.postalCode;
+var province =req.body.province;
+var streetAddress=req.body.streetAddress;
+//var totalPrice=req.body.totalPrice;
 
-const myquery2="INSERT INTO `order_tbl`(`cust_id`, `item_title`, `address`, `totalPrice`) VALUE(?,?,?,?) ";
+const post=[cust_id, item_title,totalPrice, citySuburb, name, phoneNumber, postalCode, province, streetAddress]; 
+
+
+const myquery2="INSERT INTO `order_tbl`(`cust_id`, `item_title`, `totalPrice`,`citySuburb`, `name`, `phoneNumber`, `postalCode`, `province`, `streetAddress`) VALUE(?,?,?,?,?,?,?,?,?)";
 mysqlConn.conn.query(myquery2,post,(error,rows,fields)=>{
 if(error){
 console.log(error);
