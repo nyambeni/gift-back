@@ -119,11 +119,11 @@ else{
 router.post('/payment', (req, res) => {
 var totalprice = req.body.totalPrice;
 var cust_id = req.body.cust_id;
-var admin = "5432";
-var value = [totalprice, cust_id,admin];
+//var admin = "5432";
+var value = [totalprice, cust_id];
 //REMINDER TO LETHI to get the users cust_id we gonna use the token of the user who has login
-var query = "INSERT INTO `payment`(`total_price`, `cust_id`, `admin_id`) VALUES (?,?,?)";
-mysqlConn.query(query,value, (err,results)=>{
+var query = "INSERT INTO `payment`(`total_price`, `cust_id`) VALUES (?,?)";
+mysqlConn.conn.query(query,value, (err,results)=>{
 if(err){
 res.send(err);
 }
