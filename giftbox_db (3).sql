@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 10, 2021 at 08:02 AM
+-- Generation Time: Mar 10, 2021 at 10:48 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.2
 
@@ -78,7 +78,8 @@ INSERT INTO `customer` (`cust_id`, `firstname`, `lastname`, `emailAddress`, `pas
 (105, 'firstname', 'nkwana', 'james@gmail.com', '$2a$08$i/dQaS.pK4rxlAWV0QGOK..qvXfqcSfOkvDYxEg00bwJWTU0Wmt0O'),
 (106, 'Mahlatse', 'Nkwana', 'Mahlatse@gmail.com', '$2a$08$d7s2ySGqNqyD7X.lGMrzd.pmgC0zluWSBKjlgedVQIqRNKLWoKdia'),
 (107, NULL, 'nkosi', 'Mahe@gmail.com', '$2a$08$hubCrJ5Sd0vtbbU8iW6JgeFanv29FWQtcpSctBdkld3glBFVyTPQe'),
-(108, 'RUBEN', 'nkosi', 'Maheh@gmail.com', '$2a$08$cfUCboQwrvGdyB.XHeyWmepF9G4CsOLfSSGGaqd/v1q6N.NJwWDJu');
+(108, 'RUBEN', 'nkosi', 'Maheh@gmail.com', '$2a$08$cfUCboQwrvGdyB.XHeyWmepF9G4CsOLfSSGGaqd/v1q6N.NJwWDJu'),
+(109, 'james', 'smith', 'james@gmail.com', '123568');
 
 -- --------------------------------------------------------
 
@@ -102,7 +103,7 @@ CREATE TABLE `item` (
 
 INSERT INTO `item` (`item_id`, `category`, `item_price`, `size`, `title`, `image`, `item_descri`) VALUES
 (5, 'birthday', 30, 'small', 'blackbox', NULL, '10CM * 10 CM BOX, PERFECT FOR GIFTING SOMEONE WITH ON THEIR BIRTHDAY'),
-(6, 'anniversary', 60, 'small', 'rosegoldbox', NULL, '10CM * 10CM BOX, PERFECT FOR THE SMALL GIFT ON YOU\RE ANNIVERSARY.  DIAMONDS COME IN SMALL PACKAGES TYPE OF BOX');
+(6, 'anniversary', 60, 'small', 'rosegoldbox', NULL, '10CM * 10CM BOX, PERFECT FOR THE SMALL GIFT ON YOU\'RE ANNIVERSARY.  DIAMONDS COME IN SMALL PACKAGES TYPE OF BOX');
 
 -- --------------------------------------------------------
 
@@ -115,6 +116,7 @@ CREATE TABLE `order_tbl` (
   `order_date` date NOT NULL DEFAULT current_timestamp(),
   `cust_id` int(11) DEFAULT NULL,
   `item_title` varchar(100) DEFAULT NULL,
+  `quantity` int(11) NOT NULL,
   `totalPrice` double DEFAULT NULL,
   `citySuburb` varchar(250) DEFAULT NULL,
   `name` varchar(250) DEFAULT NULL,
@@ -128,13 +130,13 @@ CREATE TABLE `order_tbl` (
 -- Dumping data for table `order_tbl`
 --
 
-INSERT INTO `order_tbl` (`order_id`, `order_date`, `cust_id`, `item_title`, `totalPrice`, `citySuburb`, `name`, `phoneNumber`, `postalCode`, `province`, `streetAddress`) VALUES
-(1, '2021-03-05', 105, 'jabas1', 45, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, '2021-03-05', 105, 'jabas231', 45, NULL, NULL, NULL, NULL, NULL, NULL),
-(3, '2021-03-05', 105, 'rangerover', 45, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, '2021-03-08', 108, 'blaackbox', 70, NULL, NULL, NULL, NULL, NULL, NULL),
-(5, '2021-03-08', 108, 'tiny box2', 298, 'soshanguve', NULL, '04125897556', '0122', 'gauteng', '5453423 sosha'),
-(6, '2021-03-08', 108, 'tiny box2', 298, 'soshanguve', 'lizan', '04125897556', '0122', 'gauteng', '5453423 sosha');
+INSERT INTO `order_tbl` (`order_id`, `order_date`, `cust_id`, `item_title`, `quantity`, `totalPrice`, `citySuburb`, `name`, `phoneNumber`, `postalCode`, `province`, `streetAddress`) VALUES
+(1, '2021-03-05', 105, 'jabas1', 0, 45, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, '2021-03-05', 105, 'jabas231', 0, 45, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, '2021-03-05', 105, 'rangerover', 0, 45, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, '2021-03-08', 108, 'blaackbox', 0, 70, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, '2021-03-08', 108, 'tiny box2', 0, 298, 'soshanguve', NULL, '04125897556', '0122', 'gauteng', '5453423 sosha'),
+(6, '2021-03-08', 108, 'tiny box2', 0, 298, 'soshanguve', 'lizan', '04125897556', '0122', 'gauteng', '5453423 sosha');
 
 -- --------------------------------------------------------
 
@@ -156,7 +158,9 @@ CREATE TABLE `payment` (
 INSERT INTO `payment` (`pay_id`, `total_price`, `paydate`, `cust_id`) VALUES
 (1, NULL, '2021-03-08', 108),
 (2, NULL, '2021-03-08', 108),
-(3, 70, '2021-03-08', 108);
+(3, 70, '2021-03-08', 108),
+(4, NULL, '2021-03-10', 108),
+(5, 300, '2021-03-10', 108);
 
 -- --------------------------------------------------------
 
@@ -272,7 +276,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `cust_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
+  MODIFY `cust_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- AUTO_INCREMENT for table `item`
@@ -290,7 +294,7 @@ ALTER TABLE `order_tbl`
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `pay_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `pay_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `report`
