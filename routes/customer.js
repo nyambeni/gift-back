@@ -16,7 +16,15 @@ router.get("/profile/:id", function (req, post) {
 //adding to wish list
 // ....localhost:3000/addwishlist
 router.post("/addwishlist", (req, res) => {
-  const { item_title, total_price, cust_id, item_description } = req.body;
+  const {
+    item_title,
+    total_price,
+    cust_id,
+    item_description,
+    category,
+    size,
+    image,
+  } = req.body;
 
   const custwishlist = "SELECT * FROM wishlist WHERE item_title=?";
   mysqlConn.conn.query(custwishlist, [item_title], (error, rows) => {
@@ -88,6 +96,7 @@ app.get("/viewlist", (req, res) => {
 router.post("/order", (req, res) => {
   var cust_id = req.body.cust_id;
   var item_title = req.body.item_title;
+  var quantity = req.body.quantity;
   var totalPrice = req.body.totalPrice;
   var citySuburb = req.body.citySuburb;
   var name = req.body.name;
@@ -100,6 +109,7 @@ router.post("/order", (req, res) => {
   const post = [
     cust_id,
     item_title,
+    quantity,
     totalPrice,
     citySuburb,
     name,
@@ -110,7 +120,7 @@ router.post("/order", (req, res) => {
   ];
 
   const myquery2 =
-    "INSERT INTO `order_tbl`(`cust_id`, `item_title`, `totalPrice`,`citySuburb`, `name`, `phoneNumber`, `postalCode`, `province`, `streetAddress`) VALUE(?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO `order_tbl`(`cust_id`, `item_title`,`quantity`, `totalPrice`,`citySuburb`, `name`, `phoneNumber`, `postalCode`, `province`, `streetAddress`) VALUE(?,?,?,?,?,?,?,?,?)";
   mysqlConn.conn.query(myquery2, post, (error, rows, fields) => {
     if (error) {
       console.log(error);
