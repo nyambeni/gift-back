@@ -1,16 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
-const  db = require('../conn/conn');
+const db = require('../conn/conn');
 const bodyparser = require('body-parser');
 
-<<<<<<< Updated upstream
-router.post('/admin',function(req,res){
-    res.send('admin');
-});
-
-module.exports = router ;
-=======
 var router = express.Router();
 
 //getting all customer
@@ -18,7 +11,9 @@ router.get("/allcustomer", (req, res) => {
   sql1 = "SELECT firstname,lastname,emailAddress FROM customer";
   mysqlConn.conn.query(sql1, (rows, results, error) => {
     try {
-      res.send({ data: results });
+      res.send({
+        data: results
+      });
     } catch (error) {
       console.log(error);
     }
@@ -32,7 +27,9 @@ router.get("/payments", (req, res) => {
   //+ Options
   mysqlConn.conn.query(payments, (rows, results, error) => {
     try {
-      res.send({ data: results });
+      res.send({
+        data: results
+      });
     } catch (error) {
       console.log(error);
     }
@@ -134,13 +131,13 @@ router.post('/upload', (req, res, file) => {
   var price = req.price;
   var size = req.size;
   var title = req.title;
-  var value = [category,price,size,title];
+  var value = [category, price, size, title];
 
-var sql =
-'INSERT INTO item( `category`, `item_price`, `size`, `title`, `image`) VALUE(?,?,?,?,?)';
-var query = mysqlConn.conn.query(sql,value,function (err, result) {
-res.send('items added to databse'); //res.redirect('profile/'+result.insertId);
-});
+  var sql =
+    'INSERT INTO item( `category`, `item_price`, `size`, `title`, `image`) VALUE(?,?,?,?,?)';
+  var query = mysqlConn.conn.query(sql, value, function (err, result) {
+    res.send('items added to databse'); //res.redirect('profile/'+result.insertId);
+  });
 })
 
 
@@ -175,4 +172,3 @@ module.exports = router;
 
 
 module.exports = router;
->>>>>>> Stashed changes

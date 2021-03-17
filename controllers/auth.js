@@ -7,7 +7,7 @@ const connection = require('../config/conn_db');
 //registering a customer to the database
 //localhost:3000/register/register
 exports.customer_register = (req, res) => {
-    const {
+  const {
     firstname,
     lastname,
     emailAddress,
@@ -63,7 +63,9 @@ module.exports.AdminLogin = (req, res, next) => {
       throw err;
     }
     if (!result.length) {
-      return res.status(401).send({msg:'Username or password is incorrect!'});
+      return res.status(401).send({
+        msg: 'Username or password is incorrect!'
+      });
     }
     // check password
     bcrypt.compare(req.body.password, result[0]['password'],
@@ -71,7 +73,9 @@ module.exports.AdminLogin = (req, res, next) => {
         // wrong password
         if (bErr) {
           //throw bErr;
-          return res.status(401).send({msg:'Username or password is incorrect!'});
+          return res.status(401).send({
+            msg: 'Username or password is incorrect!'
+          });
         }
         if (bResult) {
           const token = jwt.sign({
@@ -89,7 +93,9 @@ module.exports.AdminLogin = (req, res, next) => {
             user: result[0] //user details appears including the password
           });
         }
-        return res.status(401).send({msg:'Username or password is incorrect!'});
+        return res.status(401).send({
+          msg: 'Username or password is incorrect!'
+        });
       }
     );
   });
@@ -104,7 +110,9 @@ module.exports.customer_login = (req, res, next) => {
       throw err;
     }
     if (!result.length) {
-      return res.status(400).send({msg:'Username or password is incorrect! '});
+      return res.status(400).send({
+        msg: 'Username or password is incorrect! '
+      });
     }
     // check password
     bcrypt.compare(req.body.password, result[0]['password'],
@@ -112,7 +120,9 @@ module.exports.customer_login = (req, res, next) => {
         // wrong password
         if (bErr) {
           //throw bErr;
-          return res.status(401).send({msg: 'Username or password is incorrect! '});
+          return res.status(401).send({
+            msg: 'Username or password is incorrect! '
+          });
         }
         if (bResult) {
           const token = jwt.sign({
@@ -130,7 +140,9 @@ module.exports.customer_login = (req, res, next) => {
             user: result[0] //user details appears including the password
           });
         }
-        return res.status(400).send({msg:'Username or password is incorrect! '});
+        return res.status(400).send({
+          msg: 'Username or password is incorrect! '
+        });
       }
     );
   });

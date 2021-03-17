@@ -26,7 +26,6 @@ router.post('/update',function(req,res){
   
 })
 
-
 //Add to cart
 router.post('/add',function(req,res){
   
