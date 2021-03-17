@@ -14,7 +14,7 @@ router.get("/profile/:id", function (req, post) {
 });
 
 //adding to wish list
-// ....localhost:3000/customer/addwishlist
+//localhost:3000/customer/addwishlist
 router.post("/addwishlist", (req, res) => {
   const {
     item_title,

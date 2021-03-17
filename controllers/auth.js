@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const connection = require('../config/conn_db');
 
 //registering a customer to the database
+//localhost:3000/register/register
 exports.customer_register = (req, res) => {
     const {
     firstname,
@@ -54,6 +55,7 @@ exports.customer_register = (req, res) => {
 }
 
 //this is for the admin login
+//localhost:3000/login/admin
 module.exports.AdminLogin = (req, res, next) => {
   connection.conn.query('SELECT * FROM admin WHERE username = ?', [req.body.username], (err, result) => {
     // user does not exists
@@ -94,6 +96,7 @@ module.exports.AdminLogin = (req, res, next) => {
 };
 
 //customer login
+//localhost:3000/login/customer
 module.exports.customer_login = (req, res, next) => {
   connection.conn.query('SELECT * FROM customer WHERE emailAddress = ?', [req.body.emailAddress], (err, result) => {
     // user does not exists
