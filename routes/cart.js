@@ -51,13 +51,13 @@ images
         "description": req.body.description,
         "cust_id": req.body.cust_id,
         "price": req.body.price,
-       
+        "images": req.body.images,
     };
 
     // validate product 
     var item_name = req.body.item_name;
     var myQuery1 = "SELECT * FROM cart WHERE title = ?";
-    mysqlConn.query(myQuery1,[item_name],function(err,results){
+    mysqlConn.query(myQuery1,[title],function(err,results){
         
         if(results.length > 0){
 

@@ -48,9 +48,12 @@ INSERT INTO `admin` (`admin_id`, `username`, `password`) VALUES
 
 CREATE TABLE `cart` (
   `cart_id` int(11) NOT NULL,
-  `item_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `total_price` double NOT NULL
+  `title` varchar(250) DEFAULT NULL,
+  `size` int(11) NOT NULL,
+  `price` double NOT NULL
+  `description`varchar(250) DEFAULT NULL,
+   `cust_id`int(11) NOT NULL,
+    `images`varchar(250) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------

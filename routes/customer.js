@@ -23,13 +23,18 @@ router.get("/profile/:custId", function (req, res) {
 
 
 //updating customer profile not fully functioning still working 
-router.put('/profile/upadate/:id',function(req,res){
+router.put('/profile/update/:cust_id',function(req,res){
+ var cust_id= req.body.cust_id;
+  var firstname = req.body.firstname;
+  var lastname = req.body.lastname ;
+  var emailAddress = req.body.emailAddress;
+  var password = req.body.password;
 
-  const  {firstname,lastname,emailAddress}=req.body;
-  upt="UPDATE customer SET firstname = ? ,lastname= ? ,emailAddress= ? WHERE cust_id= ?";
-  mysqlConn.conn.query(upt,[req.params.id] ,[firstname,lastname,emailAddress],(rows,results,error)=>{
+
+  upt="UPDATE customer SET firstname=? ,lastname=? WHERE cust_id= ?";
+  mysqlConn.conn.query(upt,[firstname,lastname,req.params.cust_id],(rows,results,error)=>{
     if (!error){
-        res.status(200).send({message:'profile has been updated'})
+        res.status(200).send(rows)
     }
     else{
       console.log(error)
@@ -39,8 +44,8 @@ router.put('/profile/upadate/:id',function(req,res){
   })
 
 
-
 })
+
 
 //adding to wish list
 // ....localhost:3000/addwishlist
@@ -117,14 +122,15 @@ const _id=req.params.id;
 sqls="SELECT * FROM order_tbl WHERE cust_id = ? ";
 mysqlConn.conn.query(sqls,[_id],(rows,error,results)=>{
   if (!error) {
+   
+    res.status(200).json({data:rows})
 
-    
+  }else{
+    console.log(error)
   }
 })
 
-
 })
-
 //Add to Order
 router.post("/order", (req, res) => {
   var cust_id = req.body.cust_id;
