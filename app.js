@@ -9,6 +9,7 @@ const router = express.Router();
 app.use(bodyParser.json());
 app.use(cors());
 
+<<<<<<< Updated upstream
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST,GET,DELETE,OPTIONS');
@@ -34,3 +35,13 @@ const server = app.listen(port, function () {
 });
 
 module.exports = router;
+=======
+app.use("/items", express.static("./upload/images"));
+app.use("/admin", adminApi);
+app.use("/register", customer_register);
+app.use("/login", Login);
+app.use("/customer", customer_file);
+app.use("/caprofile", caprofile); //CA customer admin profile
+
+app.listen(port, () => console.log("Go to localhost:" + port));
+>>>>>>> Stashed changes
