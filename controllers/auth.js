@@ -38,8 +38,9 @@ exports.customer_register=(req,res)=>{
             }
             else{
                 //console.log(rows);
-                const exp={firstname:firstname,lastname:lastname,emailAddress:emailAddress,password:hashedPassword}
+                const exp={cust_id,firstname:firstname,lastname:lastname,emailAddress:emailAddress,password:hashedPassword}
               //  const semail={email:emailAddress}
+
                 res.status(200).send({data:exp,message:'email registered in the database'});
             }
         })
@@ -82,7 +83,7 @@ module.exports.AdminLogin=(req, res, next) => {
               }
             );
            
-            return res.status(200).send({
+            return res.status(200).json({
               msg: 'Logged in!',
               token,
               user: result[0]//user details appears including the password

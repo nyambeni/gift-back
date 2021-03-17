@@ -29,19 +29,34 @@ router.post('/update',function(req,res){
 
 //Add to cart
 router.post('/add',function(req,res){
-  
+  /*
+AADD TO CART
+
+title,
+category
+item_id
+size,
+price
+description
+customer id
+available item
+images
+*/
 
     var post = {
     
-        "item_name": req.body.item_name,
+        "title": req.body.title,
         "price": req.body.price,
+        "size": req.body.size,
         "description": req.body.description,
-        "qty": req.body.qty,
+        "cust_id": req.body.cust_id,
+        "price": req.body.price,
+       
     };
 
     // validate product 
     var item_name = req.body.item_name;
-    var myQuery1 = "SELECT * FROM cart WHERE item_name = ?";
+    var myQuery1 = "SELECT * FROM cart WHERE title = ?";
     mysqlConn.query(myQuery1,[item_name],function(err,results){
         
         if(results.length > 0){
@@ -91,3 +106,17 @@ router.delete('/delete/:cart_id',function(req,res){
 });
 
 module.exports = router;
+
+/*
+AADD TO CART
+
+title,
+category
+item_id
+size,
+price
+description
+customer id
+available item
+images
+*/

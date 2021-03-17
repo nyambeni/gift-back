@@ -8,17 +8,46 @@ const router = express.Router();
 
 //customer profile
 
-router.get("/profile/:id", function (req, post) {
+router.get("/profile/:custId", function (req, res) {
+  custId = req.params.custId;
   var sql1 =
-    "SELECT firstname,lastname,emailAddress from customer WHERE cust_id = ?";
+    "SELECT firstname,lastname,emailAddress FROM customer WHERE cust_id = ?";
+  mysqlConn.conn.query(sql1, [custId], (rows, results, error) => {
+    try {
+      res.send(rows);
+    } catch (error) {
+      console.log(error);
+    }
+  });
 });
+
+
+//updating customer profile not fully functioning still working 
+router.put('/profile/upadate/:id',function(req,res){
+
+  const  {firstname,lastname,emailAddress}=req.body;
+  upt="UPDATE customer SET firstname = ? ,lastname= ? ,emailAddress= ? WHERE cust_id= ?";
+  mysqlConn.conn.query(upt,[req.params.id] ,[firstname,lastname,emailAddress],(rows,results,error)=>{
+    if (!error){
+        res.status(200).send({message:'profile has been updated'})
+    }
+    else{
+      console.log(error)
+    }
+    
+
+  })
+
+
+
+})
 
 //adding to wish list
 // ....localhost:3000/addwishlist
 router.post("/addwishlist", (req, res) => {
   const {
     item_title,
-    total_price,
+    item_price,
     cust_id,
     item_description,
     category,
@@ -37,9 +66,12 @@ router.post("/addwishlist", (req, res) => {
       // INSERT INTO `wishlist`(`wish_id`, `item_title`, `price`, `admin_id`
       const values = {
         item_title: item_title,
-        total_price: total_price,
+        item_price: item_price,
         cust_id: cust_id,
         item_description: item_description,
+        category: category,
+        size: size,
+        image: image,
       };
       const query1 = "INSERT INTO wishlist SET ?";
       mysqlConn.conn.query(query1, values, (error, results) => {
@@ -57,7 +89,7 @@ router.post("/addwishlist", (req, res) => {
 router.delete("/deletewishlist/:title", (req, res) => {
   var sQL1 = "DELETE FROM `wishlist` WHERE `item_title` = ?";
   mysqlConn.conn.query(sQL1, [req.params.title], (err, rows, fields) => {
-    if (!err) res.send("Deleted successfully");
+    if (!err) res.json("Deleted successfully");
     else console.log(err);
   });
 });
@@ -72,25 +104,26 @@ router.get("/viewWishlist/:custId", function (req, res) {
       console.log(err);
       res.send(err);
     } else {
-      res.send({ data: rows });
+      res.json({ data: rows });
       console.log({ data: results });
     }
   });
 });
 
-//
-//view wish list
-app.get("/viewlist", (req, res) => {
-  const view = "SELECT * FROM wishlist";
-  //add the user table
-  mysqlConn.conn.query(view, (error, results) => {
-    if (error) {
-      console.log(error);
-    } else {
-      res.send(results);
-    }
-  });
-});
+//view order by id
+
+router.get('/order/:id',function(req,res){
+const _id=req.params.id;
+sqls="SELECT * FROM order_tbl WHERE cust_id = ? ";
+mysqlConn.conn.query(sqls,[_id],(rows,error,results)=>{
+  if (!error) {
+
+    
+  }
+})
+
+
+})
 
 //Add to Order
 router.post("/order", (req, res) => {
@@ -120,7 +153,7 @@ router.post("/order", (req, res) => {
   ];
 
   const myquery2 =
-    "INSERT INTO `order_tbl`(`cust_id`, `item_title`,`quantity`, `totalPrice`,`citySuburb`, `name`, `phoneNumber`, `postalCode`, `province`, `streetAddress`) VALUE(?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO `order_tbl`(`cust_id`, `item_title`,`quantity`, `totalPrice`,`citySuburb`, `name`, `phoneNumber`, `postalCode`, `province`, `streetAddress`) VALUE(?,?,?,?,?,?,?,?,?,?)";
   mysqlConn.conn.query(myquery2, post, (error, rows, fields) => {
     if (error) {
       console.log(error);
