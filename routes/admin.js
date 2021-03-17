@@ -131,18 +131,47 @@ router.post('/uploadpic', (req, res, file) => {
 //upload giftbox item details
 //localhost:3000/admin/upload
 router.post('/upload', (req, res, file) => {
-  var category = req.category;
-  var price = req.price;
-  var size = req.size;
-  var title = req.title;
-  var value = [category, price, size, title];
-
+  var category = req.body.category;
+  var price = req.body.price;
+  var size = req.body.size;
+  var title = req.body.title;
+  var description = req.body.description;
+  var value = [category, price, size, title,description];
   var sql =
-    'INSERT INTO item( `category`, `item_price`, `size`, `title`, `image`) VALUE(?,?,?,?,?)';
-  var query = mysqlConn.conn.query(sql, value, function (err, result) {
-    res.send('items added to databse'); //res.redirect('profile/'+result.insertId);
+    'INSERT INTO item( `category`, `item_price`, `size`, `title`,`item_descri`) VALUE(?,?,?,?,?)';
+    mysqlConn.conn.query(sql,value,(err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send({
+          data: value,
+          code: 200,
+          message: "Item added successfully",
+        });
+      }});
   });
-})
+/** 
+  //update item/giftboxes in database
+//localhost:3000/admin/updateItem/item_id
+  router.put("/updateItem/:id", (req,res) => {
+    id=req.params.id
+    var category = req.body.category;
+    var price = req.body.price;
+    var size = req.body.size;
+    var title = req.body.title;
+    var description = req.body.description;
+    var value = [category, price, size, title,description, id];
+    
+    var sql = "UPDATE `item` SET  `category` = ?, `item_price`=?,`size`=?,`title`=?,`image`=?,`item_descri`=? WHERE item_id = ?";
+
+    mysqlConn.conn.query(sql,value, function (err, result) {
+      if (err) throw err;
+      console.log(result.affectedRows + " record(s) updated");
+      res.send(result.affectedRows + " record(s) updated");
+    });
+
+  })**/
+ 
 
 //getting get a specific customer
 //localhost:3000/admin/allcustomer/id
