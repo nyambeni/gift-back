@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
-const db = require('../conn/conn');
+const db = require('../config/conn_db');
 const bodyparser = require('body-parser');
 
-var router = express.Router();
-
 //getting all customer
+//localhost:3000/admin/allcustomer
 router.get("/allcustomer", (req, res) => {
   sql1 = "SELECT firstname,lastname,emailAddress FROM customer";
   mysqlConn.conn.query(sql1, (rows, results, error) => {

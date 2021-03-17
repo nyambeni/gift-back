@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const express = require('express');
 var cors = require('cors');
-const mysqlConn= require('../conn/conn');
+const mysqlConn= require('../config/conn_db');
 const bodyParser = require('body-parser');
 const router = express.Router();
 const jwt = require('jsonwebtoken');

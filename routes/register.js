@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
-const  db = require('../conn/conn');
+const  db = require('../config/conn_db');
 
 //register student 
 router.post('/register', function(req, res){  
