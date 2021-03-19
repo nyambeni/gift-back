@@ -22,7 +22,7 @@ router.get("/profile/:custId", function (req, res) {
 });
 
 
-//updating customer profile not fully functioning still working 
+//updating customer profile 
 router.put('/profile/update/:cust_id',function(req,res){
   var cust_id= req.body.cust_id;
    var firstname = req.body.firstname;
@@ -44,6 +44,21 @@ router.put('/profile/update/:cust_id',function(req,res){
    })
  
  
+ })
+ //delete customer account
+ router.delete('/delete/:id',(req,res)=>{
+   var id=req.params.id;
+   var del='DELETE FROM customer WHERE cust_id = ? ';
+   mysqlConn.conn.query(del,[id],(rows,error)=>{
+     if(!error)
+     {
+       res.send({message:"successfully deleted "});
+     }
+     else{
+       console.log(error);
+     }
+   })
+
  })
 
  //API to view items by category for customer
