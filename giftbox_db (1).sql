@@ -2,10 +2,10 @@
 -- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Mar 10, 2021 at 10:48 AM
+-- Host: 127.0.0.1
+-- Generation Time: Mar 19, 2021 at 11:48 AM
 -- Server version: 10.4.17-MariaDB
--- PHP Version: 8.0.2
+-- PHP Version: 8.0.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `gift_box`
+-- Database: `giftbox_db`
 --
 
 -- --------------------------------------------------------
@@ -64,22 +64,28 @@ CREATE TABLE `customer` (
   `firstname` varchar(100) DEFAULT NULL,
   `lastname` varchar(100) DEFAULT NULL,
   `emailAddress` varchar(100) DEFAULT NULL,
-  `password` varchar(100) DEFAULT NULL
+  `password` varchar(100) DEFAULT NULL,
+  `date_created` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`cust_id`, `firstname`, `lastname`, `emailAddress`, `password`) VALUES
-(101, 'lethu', 'nkosi', 'lethu@gmail.com', 'Lethu@123'),
-(102, 'lee', 'nks', 'nks@gmail.com', 'nks@1234'),
-(104, NULL, NULL, NULL, NULL),
-(105, 'firstname', 'nkwana', 'james@gmail.com', '$2a$08$i/dQaS.pK4rxlAWV0QGOK..qvXfqcSfOkvDYxEg00bwJWTU0Wmt0O'),
-(106, 'Mahlatse', 'Nkwana', 'Mahlatse@gmail.com', '$2a$08$d7s2ySGqNqyD7X.lGMrzd.pmgC0zluWSBKjlgedVQIqRNKLWoKdia'),
-(107, NULL, 'nkosi', 'Mahe@gmail.com', '$2a$08$hubCrJ5Sd0vtbbU8iW6JgeFanv29FWQtcpSctBdkld3glBFVyTPQe'),
-(108, 'RUBEN', 'nkosi', 'Maheh@gmail.com', '$2a$08$cfUCboQwrvGdyB.XHeyWmepF9G4CsOLfSSGGaqd/v1q6N.NJwWDJu'),
-(109, 'james', 'smith', 'james@gmail.com', '123568');
+INSERT INTO `customer` (`cust_id`, `firstname`, `lastname`, `emailAddress`, `password`, `date_created`) VALUES
+(101, 'lethu', 'nkosi', 'lethu@gmail.com', 'Lethu@123', '2021-03-19'),
+(102, 'lee', 'nks', 'nks@gmail.com', 'nks@1234', '2021-03-19'),
+(104, NULL, NULL, NULL, NULL, '2021-03-19'),
+(105, 'firstname', 'nkwana', 'james@gmail.com', '$2a$08$i/dQaS.pK4rxlAWV0QGOK..qvXfqcSfOkvDYxEg00bwJWTU0Wmt0O', '2021-03-19'),
+(106, 'Mahlatse', 'Nkwana', 'Mahlatse@gmail.com', '$2a$08$d7s2ySGqNqyD7X.lGMrzd.pmgC0zluWSBKjlgedVQIqRNKLWoKdia', '2021-03-19'),
+(107, NULL, 'nkosi', 'Mahe@gmail.com', '$2a$08$hubCrJ5Sd0vtbbU8iW6JgeFanv29FWQtcpSctBdkld3glBFVyTPQe', '2021-03-19'),
+(108, 'RUBEN', 'nkosi', 'Maheh@gmail.com', '$2a$08$cfUCboQwrvGdyB.XHeyWmepF9G4CsOLfSSGGaqd/v1q6N.NJwWDJu', '2021-03-19'),
+(109, 'james', 'smith', 'james@gmail.com', '123568', '2021-03-19'),
+(110, 'Lethi', 'Nkosi', 'nkosi@gmail.com', '$2a$08$L5Yq7khGtg92AAuH7IGpV.3DayZt8e/TdmTJBKvrBn9DDcr4bx5P.', '2021-03-19'),
+(111, 'casdasdf', 'vxsvgfsdfsdfs', 'nkossi@gmail.com', '$2a$08$DuhmSopRMc8RoVXqfhnM0.7JGBili.hhgGPN0g1XSmtKDDxwKUsha', '2021-03-19'),
+(112, 'casdasdf', 'vxsvgfsdfsdfs', 'nkossadasdadsdi@gmail.com', '$2a$08$sHK4w8rrNTsHBgv1uzCbXedkgrch1./cw353bD62VsE5aj6mmH1JS', '2021-03-19'),
+(113, 'khaya', 'buthelezi', 'khaya@gmail.com', 'Khaya@123', '2021-03-20'),
+(114, 'thando', 'thandi', 'thadi@gmail.com', 'thadi@1234', '2021-03-19');
 
 -- --------------------------------------------------------
 
@@ -103,7 +109,10 @@ CREATE TABLE `item` (
 
 INSERT INTO `item` (`item_id`, `category`, `item_price`, `size`, `title`, `image`, `item_descri`) VALUES
 (5, 'birthday', 30, 'small', 'blackbox', NULL, '10CM * 10 CM BOX, PERFECT FOR GIFTING SOMEONE WITH ON THEIR BIRTHDAY'),
-(6, 'anniversary', 60, 'small', 'rosegoldbox', NULL, '10CM * 10CM BOX, PERFECT FOR THE SMALL GIFT ON YOU\'RE ANNIVERSARY.  DIAMONDS COME IN SMALL PACKAGES TYPE OF BOX');
+(7, NULL, NULL, NULL, NULL, NULL, NULL),
+(8, NULL, NULL, NULL, NULL, NULL, NULL),
+(9, NULL, NULL, NULL, NULL, NULL, NULL),
+(10, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -116,7 +125,7 @@ CREATE TABLE `order_tbl` (
   `order_date` date NOT NULL DEFAULT current_timestamp(),
   `cust_id` int(11) DEFAULT NULL,
   `item_title` varchar(100) DEFAULT NULL,
-  `quantity` int(11) NOT NULL,
+  `quantity` int(11) DEFAULT NULL,
   `totalPrice` double DEFAULT NULL,
   `citySuburb` varchar(250) DEFAULT NULL,
   `name` varchar(250) DEFAULT NULL,
@@ -160,7 +169,8 @@ INSERT INTO `payment` (`pay_id`, `total_price`, `paydate`, `cust_id`) VALUES
 (2, NULL, '2021-03-08', 108),
 (3, 70, '2021-03-08', 108),
 (4, NULL, '2021-03-10', 108),
-(5, 300, '2021-03-10', 108);
+(5, 300, '2021-03-10', 108),
+(6, NULL, '2021-03-17', NULL);
 
 -- --------------------------------------------------------
 
@@ -196,8 +206,9 @@ CREATE TABLE `wishlist` (
 
 INSERT INTO `wishlist` (`wish_id`, `item_title`, `item_price`, `cust_id`, `item_description`, `category`, `size`, `image`) VALUES
 (1, 'fruit box', 45, 105, 'label is the back', NULL, NULL, NULL),
-(2, 'fruit', 45, 105, 'labelis  is the back', NULL, NULL, NULL),
-(4, 'blackbox', 70, 108, 'A BLACK BOX, FOR GIFTING', NULL, NULL, NULL);
+(4, 'blackbox', 70, 108, 'A BLACK BOX, FOR GIFTING', NULL, NULL, NULL),
+(5, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -276,25 +287,25 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `cust_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
+  MODIFY `cust_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
 
 --
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `order_tbl`
 --
 ALTER TABLE `order_tbl`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `pay_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `pay_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `report`
@@ -306,7 +317,7 @@ ALTER TABLE `report`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `wish_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `wish_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
@@ -334,4 +345,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
