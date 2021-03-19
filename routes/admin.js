@@ -197,7 +197,7 @@ router.post('/upload', (req, res, file) => {
   });
   
  
-  //update item/giftboxes in database
+    //update item/giftboxes in database
 //localhost:3000/admin/updateItem/item_id
   router.put("/updateItem/:id", (req,res) => {
     id=req.params.id
@@ -208,7 +208,7 @@ router.post('/upload', (req, res, file) => {
     var description = req.body.description;
     var value = [category, price, size, title,description, id];
     
-    var sql = "UPDATE `item` SET  `category` = ?, `item_price`=?,`size`=?,`title`=?,`image`=?,`item_descri`=? WHERE item_id = ?";
+    var sql = "UPDATE `item` SET  `category` = ?, `item_price`=?,`size`=?,`title`=?,`item_descri`=? WHERE item_id = ?";
 
     mysqlConn.conn.query(sql,value, function (err, result) {
       if (err) throw err;
@@ -217,7 +217,6 @@ router.post('/upload', (req, res, file) => {
     });
 
   })
- 
 
 //getting get a specific customer
 //localhost:3000/admin/allcustomer/id
