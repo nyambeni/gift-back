@@ -52,8 +52,8 @@ CREATE TABLE `cart` (
   `size` int(11) NOT NULL,
   `price` double NOT NULL
   `description`varchar(250) DEFAULT NULL,
-   `cust_id`int(11) NOT NULL,
-    `images`varchar(250) DEFAULT NULL
+  `cust_id`int(11) NOT NULL,
+  `images`varchar(250) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -97,16 +97,17 @@ CREATE TABLE `item` (
   `size` varchar(50) DEFAULT NULL,
   `title` varchar(50) DEFAULT NULL,
   `image` varchar(250) DEFAULT NULL,
-  `item_descri` varchar(500) DEFAULT NULL
+  `item_descri` varchar(500) DEFAULT NULL,
+  `avail_item`  int (11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `item`
 --
 
-INSERT INTO `item` (`item_id`, `category`, `item_price`, `size`, `title`, `image`, `item_descri`) VALUES
-(5, 'birthday', 30, 'small', 'blackbox', NULL, '10CM * 10 CM BOX, PERFECT FOR GIFTING SOMEONE WITH ON THEIR BIRTHDAY'),
-(6, 'anniversary', 60, 'small', 'rosegoldbox', NULL, '10CM * 10CM BOX, PERFECT FOR THE SMALL GIFT ON YOU\'RE ANNIVERSARY.  DIAMONDS COME IN SMALL PACKAGES TYPE OF BOX');
+INSERT INTO `item` (`item_id`, `category`, `item_price`, `size`, `title`, `image`, `item_descri`,`avail_item`) VALUES
+(5, 'birthday', 30, 'small', 'blackbox', NULL, '10CM * 10 CM BOX, PERFECT FOR GIFTING SOMEONE WITH ON THEIR BIRTHDAY',50),
+(6, 'anniversary', 60, 'small', 'rosegoldbox', NULL, '10CM * 10CM BOX, PERFECT FOR THE SMALL GIFT ON YOU\RE ANNIVERSARY.  DIAMONDS COME IN SMALL PACKAGES TYPE OF BOX',50);
 
 -- --------------------------------------------------------
 

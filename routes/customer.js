@@ -24,27 +24,63 @@ router.get("/profile/:custId", function (req, res) {
 
 //updating customer profile not fully functioning still working 
 router.put('/profile/update/:cust_id',function(req,res){
- var cust_id= req.body.cust_id;
-  var firstname = req.body.firstname;
-  var lastname = req.body.lastname ;
-  var emailAddress = req.body.emailAddress;
-  var password = req.body.password;
+  var cust_id= req.body.cust_id;
+   var firstname = req.body.firstname;
+   var lastname = req.body.lastname ;
+   var emailAddress = req.body.emailAddress;
+   var password = req.body.password;
+ 
+ 
+   upt="UPDATE customer SET firstname=? ,lastname=? WHERE cust_id= ?";
+   mysqlConn.conn.query(upt,[firstname,lastname,req.params.cust_id],(rows,results,error)=>{
+     if (!error){
+         res.status(200).send(rows)
+     }
+     else{
+       console.log(error)
+     }
+     
+ 
+   })
+ 
+ 
+ })
 
 
-  upt="UPDATE customer SET firstname=? ,lastname=? WHERE cust_id= ?";
-  mysqlConn.conn.query(upt,[firstname,lastname,req.params.cust_id],(rows,results,error)=>{
-    if (!error){
-        res.status(200).send(rows)
+ //update items quantity
+router.put('/avail/item',function(req,res){
+
+ var tem;
+ var quantity;
+ 
+
+  var item_id =req.body.item_id;
+  var category =req.body.category;
+  var item_price= req.body.item_price;
+  var size=req.body.size;
+  var title=req.body.title;
+  var image=req.body.image;
+  var item_descri=req.body.item_descri;
+  var avail_item=req.body.avail_item;
+ 
+  
+     // var sub='(SELECT avail_item '+'-'+quantity+'FROM item)';
+
+  var items='UPDATE item SET avail_item = ? WHERE title = ? ';
+  mysqlConn.conn.query(items,[avail_item,title],(rows,error,result)=>{
+
+    if(!error)
+    {
+      res.send({message:'successfully updated'});
+    }else
+    {
+       console.log(error);
     }
-    else{
-      console.log(error)
-    }
-    
 
   })
 
-
 })
+
 
 
 //adding to wish list
