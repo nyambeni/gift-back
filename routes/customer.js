@@ -46,6 +46,20 @@ router.put('/profile/update/:cust_id',function(req,res){
  
  })
 
+ //API to view items by category for customer
+router.get('/viewItem/:category', (req, res) => {
+  var item_category = req.params.category;
+  var query = 'SELECT * FROM item WHERE category = ?';
+  mysqlConn.conn.query(query, [item_category], (err, results) => {
+    if (err) {
+      res.send(err);
+    } else {
+      console.log(results);
+      res.send(results);
+    }
+  });
+});
+
 
  //update items quantity
 router.put('/avail/item',function(req,res){
