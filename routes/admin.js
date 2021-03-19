@@ -1,33 +1,79 @@
-var mysql = require("mysql");
-var express = require("express");
-var auth = require("../controllers/auth");
-//var auth = require('../imageUpload');
-//var session = require('express-session');
-var bodyParser = require("body-parser");
-var mysqlConn = require("../config/conn_db");
-
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const mysql = require('mysql');
+const mysqlConn = require('../config/conn_db');
+const bodyparser = require('body-parser');
 
 //getting all customer
+//localhost:3000/admin/allcustomer
 router.get("/allcustomer", (req, res) => {
-  sql1 = "SELECT firstname,lastname,emailAddress FROM customer";
-  mysqlConn.conn.query(sql1, (rows, results, error) => {
-    try {
-      res.send({ data: results });
-    } catch (error) {
-      console.log(error);
+  sql1 = "SELECT * FROM customer";
+  mysqlConn.conn.query(sql1,(results, err) => {
+    if (err) {
+      res.send(err);
+    } else {
+      console.log(results);
+      res.send(results);
     }
   });
 });
 
+//get Customer By date for the report
+//localhost:3000/admin/customer/month
+router.get("/customer/:date_month", (req, res) => {
+  var date_month = req.params.date_month
+  sql1 = "SELECT * FROM customer WHERE MONTH(date_created) = ?";
+  mysqlConn.conn.query(sql1,[date_month],(err, results, rows) => {
+    if(!results.length) {
+      res.status(404).send("Users not found for that Month");
+        
+    }
+    else
+    {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        console.log(results);
+        res.send(results);
+      }
+    }
+ });
+});
+
+//get Order By date for the report
+//localhost:3000/admin/order/month
+router.get("/order/:date_month", (req, res) => {
+  var date_month = req.params.date_month
+  sql1 = "SELECT * FROM `order_tbl` WHERE MONTH(order_date) = ?";
+  mysqlConn.conn.query(sql1,[date_month],(err, results, rows) => {
+    if(!results.length) {
+      res.status(404).send("Users not found for that Month");
+        
+    }
+    else
+    {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        console.log(results);
+        res.send(results);
+      }
+    }
+ });
+});
+
 //get payment details API
-router.get("/payments", (req, res) => {
+//localhost:3000/admin/allpayments
+router.get("/allpayments", (req, res) => {
   payments =
     "SELECT a.firstname,a.lastname, b.* FROM order_tbl b,customer a WHERE a.cust_id=b.cust_id ";
-  //+ Options
   mysqlConn.conn.query(payments, (rows, results, error) => {
     try {
-      res.send({ data: results });
+      res.send({
+        data: results
+      });
     } catch (error) {
       console.log(error);
     }
@@ -35,8 +81,8 @@ router.get("/payments", (req, res) => {
 });
 
 //get report
+//localhost:3000/admin/report
 router.get('/report', (req, res) => {
-  console.log('i told you kg, it works');
   fs = require('fs');
   fs.writeFile(
     './report/report.txt',
@@ -50,6 +96,7 @@ router.get('/report', (req, res) => {
 });
 
 //API to get items
+//localhost:3000/admin/viewItems
 router.get('/viewItems', (req, res) => {
   var item_category = req.body.category;
   var query = 'SELECT * FROM item';
@@ -64,6 +111,7 @@ router.get('/viewItems', (req, res) => {
 });
 
 //API to view items by category
+//localhost:3000/admin/viewItem/category
 router.get('/viewItem/:category', (req, res) => {
   var item_category = req.params.category;
   var query = 'SELECT * FROM item WHERE category = ?';
@@ -78,6 +126,7 @@ router.get('/viewItem/:category', (req, res) => {
 });
 
 //delete giftbox
+//localhost:3000/admin/deleteItems/id
 router.delete('/deleteItems/:id', (req, res) => {
   var id = req.params.id;
   var sql = 'DELETE FROM `item` WHERE item_id = ?';
@@ -93,6 +142,7 @@ router.delete('/deleteItems/:id', (req, res) => {
 });
 
 //upload giftbox item pic
+//localhost:3000/admin/uploadpic
 router.post('/uploadpic', (req, res, file) => {
   var post = req.body;
   var category = post.category;
@@ -124,49 +174,63 @@ router.post('/uploadpic', (req, res, file) => {
   }
 });
 //upload giftbox item details
+//localhost:3000/admin/upload
 router.post('/upload', (req, res, file) => {
-  var category = req.category;
-  var price = req.price;
-  var size = req.size;
-  var title = req.title;
-  var value = [category,price,size,title];
-
-var sql =
-'INSERT INTO item( `category`, `item_price`, `size`, `title`, `image`) VALUE(?,?,?,?,?)';
-var query = mysqlConn.conn.query(sql,value,function (err, result) {
-res.send('items added to databse'); //res.redirect('profile/'+result.insertId);
-});
-})
-
-
-//getting all customer
-
-router.get("/allcustomer", (req, res) => {
-  sql1 = "SELECT firstname,lastname,emailAddress FROM customer";
-  mysqlConn.conn.query(sql1, (rows, rma, error) => {
-    try {
-      res.json(rma);
-    } catch (error) {
-      console.log(error);
-    }
+  var category = req.body.category;
+  var price = req.body.price;
+  var size = req.body.size;
+  var title = req.body.title;
+  var description = req.body.description;
+  var value = [category, price, size, title,description];
+  var sql =
+    'INSERT INTO item( `category`, `item_price`, `size`, `title`,`item_descri`) VALUE(?,?,?,?,?)';
+    mysqlConn.conn.query(sql,value,(err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send({
+          data: value,
+          code: 200,
+          message: "Item added successfully",
+        });
+      }});
   });
+  
+ 
+  //update item/giftboxes in database
+//localhost:3000/admin/updateItem/item_id
+  router.put("/updateItem/:id", (req,res) => {
+    id=req.params.id
+    var category = req.body.category;
+    var price = req.body.price;
+    var size = req.body.size;
+    var title = req.body.title;
+    var description = req.body.description;
+    var value = [category, price, size, title,description, id];
+    
+    var sql = "UPDATE `item` SET  `category` = ?, `item_price`=?,`size`=?,`title`=?,`image`=?,`item_descri`=? WHERE item_id = ?";
+
+    mysqlConn.conn.query(sql,value, function (err, result) {
+      if (err) throw err;
+      console.log(result.affectedRows + " record(s) updated");
+      res.send(result.affectedRows + " record(s) updated");
+    });
+
+  })
+ 
+
+//getting get a specific customer
+//localhost:3000/admin/allcustomer/id
+router.get("/allcustomer/:id", (req, res) => {
+  var cust_id = req.params.id
+  sql1 = "SELECT * FROM customer WHERE cust_id = ?";
+  mysqlConn.conn.query(sql1,[cust_id],(err, results, rows) => {
+    if (err) {
+      res.send(err);
+    } else {
+      console.log(results);
+      res.send(results);
+    }});
 });
-
-//payment API
-router.get("/payments", (req, res) => {
-  payments =
-    "SELECT a.firstname,a.lastname, b.* FROM order_tbl b,customer a WHERE a.cust_id=b.cust_id ";
-  //+ Options
-  mysqlConn.conn.query(payments, (rows, results, error) => {
-    try {
-      res.json(results);
-    } catch (error) {
-      console.log(error);
-    }
-  });
-});
-
-module.exports = router;
-
 
 module.exports = router;
