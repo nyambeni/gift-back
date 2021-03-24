@@ -14,7 +14,7 @@ router.get("/profile/:custId", function (req, res) {
     "SELECT firstname,lastname,emailAddress FROM customer WHERE cust_id = ?";
   mysqlConn.conn.query(sql1, [custId], (rows, results, error) => {
     try {
-      res.send(rows);
+      res.send(results);
     } catch (error) {
       console.log(error);
     }
@@ -34,7 +34,7 @@ router.put('/profile/update/:cust_id',function(req,res){
    upt="UPDATE customer SET firstname=? ,lastname=? WHERE cust_id= ?";
    mysqlConn.conn.query(upt,[firstname,lastname,req.params.cust_id],(rows,results,error)=>{
      if (!error){
-         res.status(200).send(rows)
+         res.status(200).send(results)
      }
      else{
        console.log(error)
@@ -125,8 +125,8 @@ router.post("/addwishlist", (req, res) => {
     image,
   } = req.body;
 
-  const custwishlist = "SELECT * FROM wishlist WHERE item_title=?";
-  mysqlConn.conn.query(custwishlist, [item_title], (error, rows) => {
+  const custwishlist = "SELECT * FROM wishlist WHERE item_title=? AND cust_id= ? ";
+  mysqlConn.conn.query(custwishlist, [item_title,cust_id], (error, rows) => {
     if (error) {
       console.log(error);
     }
@@ -143,8 +143,8 @@ router.post("/addwishlist", (req, res) => {
         size: size,
         image: image,
       };
-      const query1 = "INSERT INTO wishlist SET ?";
-      mysqlConn.conn.query(query1, values, (error, results) => {
+      const query1 = "INSERT INTO wishlist SET ? ";
+      mysqlConn.conn.query(query1, [values], (error, results) => {
         if (error) {
           console.log(error);
         } else {
