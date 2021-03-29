@@ -3,6 +3,7 @@ var express = require('express');
 var auth = require('../controllers/auth');
 var bodyParser = require('body-parser');
 var mysqlConn = require('../config/conn_db');
+const { read } = require('fs');
 var router = express.Router();
 (app = express()),
   (path = require('path')),
@@ -145,10 +146,11 @@ router.get("/payments", (req, res) => {
 });
 
 //api to update  items
-router.put('/update/items',function(req,res){
+router.put('/update/items/:item_id',function(req,res){
 
+    var item_id=req.body.item_id;
 
-   var item_id =req.body.item_id;
+   //var item_id =req.body.item_id;
    var category =req.body.category;
    var item_price= req.body.item_price;
    var size=req.body.size;
@@ -159,15 +161,19 @@ router.put('/update/items',function(req,res){
   
    
   
-   var items='UPDATE item SET category = ?,item_price = ?,size =?,item_descri =? , WHERE item_id = ? ';
-   mysqlConn.conn.query(items,[category,item_price,size,item_descri,title,item_id],(rows,error,result)=>{
+   var items='UPDATE item SET category = ?,item_price = ?,size =?,title = ?,item_descri = ? WHERE item_id = ? ';
+   mysqlConn.conn.query(items,[category,item_price,size,title,item_descri,req.params.item_id],(err,rows)=>{
  
-     if(!error)
+     if(!err)
      {
-       res.send({message:'successfully updated'});
+      console.log(rows);
+        res.send({message:'successfully updated'})
+
      }else
      {
         console.log(error);
+        console.log({message:'error detected'})
+    
      }
  
    })
