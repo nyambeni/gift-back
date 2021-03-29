@@ -38,14 +38,14 @@ const upload = multer({
   },
 });
 
-app.use("/items", express.static("./upload/images"));
+app.use("/profile", express.static("./upload/images"));
 app.use("/admin", adminApi);
 app.use("/register", customer_register);
 app.use("/login", Login);
 app.use("/customer", customer_file);
 app.use("/caprofile", caprofile); //CA customer admin profile
 
-app.post("/upload", upload.single("items"), function (req, res) {
+app.post("/upload", upload.single("profile"), function (req, res) {
   res.json({
     success: 1,
     profile_url: "http://localhost:3000/items/" + req.file.filename,

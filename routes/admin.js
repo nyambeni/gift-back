@@ -144,4 +144,36 @@ router.get("/payments", (req, res) => {
   });
 });
 
+//api to update  items
+router.put('/update/items',function(req,res){
+
+
+   var item_id =req.body.item_id;
+   var category =req.body.category;
+   var item_price= req.body.item_price;
+   var size=req.body.size;
+   var title=req.body.title;
+   //var image=req.body.image;
+   var item_descri=req.body.item_descri;
+   var avail_item=req.body.avail_item;
+  
+   
+  
+   var items='UPDATE item SET category = ?,item_price = ?,size =?,item_descri =? , WHERE item_id = ? ';
+   mysqlConn.conn.query(items,[category,item_price,size,item_descri,title,item_id],(rows,error,result)=>{
+ 
+     if(!error)
+     {
+       res.send({message:'successfully updated'});
+     }else
+     {
+        console.log(error);
+     }
+ 
+   })
+ 
+ })
+ 
+
+
 module.exports = router;
