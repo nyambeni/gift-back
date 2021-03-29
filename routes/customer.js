@@ -180,6 +180,40 @@ router.get("/viewWishlist/:custId", function (req, res) {
   });
 });
 
+//update items number of boxes left after purchase
+router.put('/update/bought_item/:title',function(req,res){
+
+  var item_id =req.body.item_id;
+  var category =req.body.category;
+  var item_price= req.body.item_price;
+  var size=req.body.size;
+ // var title=req.body.title;
+  var image=req.body.image;
+  var item_descri=req.body.item_descri;
+  var avail_item=req.body.avail_item;
+  var avail_box=req.body.avail_box;
+
+
+  var items ='UPDATE item SET avail_item= ?'+ 
+             'WHERE title = ?';
+
+  mysqlConn.conn.query(items,[avail_item,req.params.title],(err,result)=>{
+
+    if(!err)
+    {
+      res.send({message:'successfully updated'});
+    }else
+    {
+       console.log(err);
+    }
+
+  })
+
+})
+
+
+
+
 //view order by id
 
 router.get('/order/:id',function(req,res){
