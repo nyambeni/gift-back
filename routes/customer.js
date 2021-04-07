@@ -271,9 +271,14 @@ router.post("/order", (req, res) => {
   });
 });
 
+
+
+
 //Delete order
 router.delete("/order/:id", (req, res) => {
   var order_id = req.params.order_id;
+
+  
   var myquery = "DELETE FROM `order_tbl` WHERE order_id =?";
   mysqlConn.conn.query(myquery, [order_id], (err, results) => {
     if (err) {
@@ -306,5 +311,105 @@ router.post("/payment", (req, res) => {
     }
   });
 });
+
+
+//during recess
+//update items number of boxes left after purchase
+router.post('/updates/item/:qty/:title',function(req,res){
+
+ // var _qtys = req.params.qty;
+  var _qty=req.params.qty;
+  var _title=req.params.title;
+ 
+
+   //search if the item exist 
+    var s_item='SELECT * FROM item WHERE title = ? ';
+
+   mysqlConn.conn.query(s_item,[_title],(err,rows,results)=>{
+
+    if (err) {
+
+      console.log(err)
+      return res.send({message:'something went wrong'});
+      
+    } else if(rows.length > 0){
+
+      var u_item='SELECT IF (avail_item >= ? AND 0<=! ? AND ? > -? ,"successful","unsuccessful") "status" FROM item '+
+      ' WHERE title= ?';
+//i_temchk,
+      mysqlConn.conn.query(u_item,[_qty,_qty,_qty,_qty,_title],(err,rows,results)=>{
+        
+        if (!err) {
+
+          res.status(200).send(rows);
+
+          var i_temchk=' UPDATE item SET avail_item = (SELECT avail_item - (IF(avail_item >= ? AND ? > -?, ?, 0)) '+
+                 ' FROM item WHERE title = ?) '+
+                 ' WHERE title = ?';
+         
+         mysqlConn.conn.query(i_temchk,[_qty,_qty,_qty,_qty,_title,_title],(err,results)=>{
+
+          if(!err)
+          {
+            res.status(200);
+          }else{
+
+            console.log(err);
+
+          }
+
+         })
+
+        //  return res.send('');
+          
+          
+        } else {
+
+          console.log(err);
+          
+        }
+
+      })
+
+    }else {
+
+      return res.send({message: _title +' is not available'});
+      
+    }
+
+   })
+
+})
+
+
+
+
+
+
+
+
+//during recess
+//for homepage
+router.get('/allitems',function(req,res){
+
+  var items='SELECT *,CASE avail_item WHEN 0 THEN "Not Available"'+
+                                     'ELSE "available" END availability FROM item';
+  
+  mysqlConn.conn.query(items,(err,rows,results)=>{
+    if (!err) {
+  
+      res.send(rows);
+      
+    } else {
+  
+      console.log(error);
+      
+    }
+  })
+  
+  })
+
+
+
 
 module.exports = router;
