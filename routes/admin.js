@@ -71,11 +71,11 @@ router.get("/allcustomer", (req, res) => {
     }});
 });
 
-//get Customer By date for the report
-//localhost:3000/admin/customer/month
-router.get("/customer/:date_month", (req, res) => {
+//get Total new Customer for the month By date for the report
+//localhost:3000/admin/newcustomer/month
+router.get("/newcustomer/:date_month", (req, res) => {
   var date_month = req.params.date_month
-  sql1 = "SELECT * FROM customer WHERE MONTH(date_created) = ?";
+  sql1 = "SELECT COUNT(*) FROM customer WHERE MONTH(date_created) = ?";
   mysqlConn.conn.query(sql1, [date_month], (err, results, rows) => {
     if (!results.length) {
       res.status(404).send("Users not found for that Month");
@@ -91,11 +91,11 @@ router.get("/customer/:date_month", (req, res) => {
   });
 });
 
-//get total number of customers who added to wishlist By date for the report
+//get Total number of customers who ADDED to WUSHLIST By date for the report
 //localhost:3000/admin/customerWishlist/month
 router.get("/customerWishlist/:date_month", (req, res) => {
   var date_month = req.params.date_month
-  sql1 = "SELECT * FROM wishlist WHERE MONTH(date_created) = ?";
+  sql1 = "SELECT COUNT(*) FROM wishlist WHERE MONTH(date_created) = ?";
   mysqlConn.conn.query(sql1, [date_month], (err, results, rows) => {
     if (!results.length) {
       res.status(404).send("Users not found for that Month");
@@ -111,7 +111,7 @@ router.get("/customerWishlist/:date_month", (req, res) => {
   });
 });
 
-//get total amount for orders for that month. its for the report
+//get Total amount for orders for that month. its for the report
 //localhost:3000/admin/totalAmount/month
 router.get("/totalAmount/:date_month", (req, res) => {
   var date_month = req.params.date_month
@@ -134,9 +134,30 @@ router.get("/totalAmount/:date_month", (req, res) => {
   });
 });
 
-//get Order By date for the report
+//get Total Orders made for the month for the report
 //localhost:3000/admin/order/month
 router.get("/order/:date_month", (req, res) => {
+  var date_month = req.params.date_month
+  sql1 = "SELECT COUNT(*) FROM `order_tbl` WHERE MONTH(order_date) = ?";
+  mysqlConn.conn.query(sql1, [date_month], (err, results, rows) => {
+    if (!results.length) {
+      res.status(404).send("Users not found for that Month");
+
+    } else {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        console.log(results);
+        console.log(results);
+        res.send(results);
+      }}
+  });
+});
+
+//get Orders made that month for the report
+//localhost:3000/admin/orders/month
+router.get("/orders/:date_month", (req, res) => {
   var date_month = req.params.date_month
   sql1 = "SELECT * FROM `order_tbl` WHERE MONTH(order_date) = ?";
   mysqlConn.conn.query(sql1, [date_month], (err, results, rows) => {
