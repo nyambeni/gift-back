@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 19, 2021 at 11:48 AM
+-- Generation Time: Apr 19, 2021 at 03:13 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -108,7 +108,7 @@ CREATE TABLE `item` (
 --
 
 INSERT INTO `item` (`item_id`, `category`, `item_price`, `size`, `title`, `image`, `item_descri`) VALUES
-(5, 'birthday', 30, 'small', 'blackbox', NULL, '10CM * 10 CM BOX, PERFECT FOR GIFTING SOMEONE WITH ON THEIR BIRTHDAY'),
+(5, NULL, NULL, NULL, NULL, NULL, NULL),
 (7, NULL, NULL, NULL, NULL, NULL, NULL),
 (8, NULL, NULL, NULL, NULL, NULL, NULL),
 (9, NULL, NULL, NULL, NULL, NULL, NULL),
@@ -197,6 +197,7 @@ CREATE TABLE `wishlist` (
   `item_description` varchar(500) DEFAULT NULL,
   `category` varchar(100) DEFAULT NULL,
   `size` varchar(100) DEFAULT NULL,
+  `date_created` date DEFAULT current_timestamp(),
   `image` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -204,11 +205,11 @@ CREATE TABLE `wishlist` (
 -- Dumping data for table `wishlist`
 --
 
-INSERT INTO `wishlist` (`wish_id`, `item_title`, `item_price`, `cust_id`, `item_description`, `category`, `size`, `image`) VALUES
-(1, 'fruit box', 45, 105, 'label is the back', NULL, NULL, NULL),
-(4, 'blackbox', 70, 108, 'A BLACK BOX, FOR GIFTING', NULL, NULL, NULL),
-(5, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(6, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `wishlist` (`wish_id`, `item_title`, `item_price`, `cust_id`, `item_description`, `category`, `size`, `date_created`, `image`) VALUES
+(1, 'fruit box', 45, 105, 'label is the back', NULL, NULL, '2021-04-19', NULL),
+(4, 'blackbox', 70, 108, 'A BLACK BOX, FOR GIFTING', NULL, NULL, '2021-04-19', NULL),
+(5, NULL, NULL, NULL, NULL, NULL, NULL, '2021-04-19', NULL),
+(6, NULL, NULL, NULL, NULL, NULL, NULL, '2021-04-19', NULL);
 
 --
 -- Indexes for dumped tables
