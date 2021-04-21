@@ -95,7 +95,8 @@ router.put('/avail/item',function(req,res){
  var s_items = 'SELECT * FROM items WHERE title= ?'; 
     mysqlConn.conn.query(s_items,[title],(err,rows)=> {
 
-      if (rows.length > 0 )
+
+      if (rows.length > 0  && !err)
       {
   var items='UPDATE item SET avail_item = ? WHERE title = ? ';
   mysqlConn.conn.query(items,[avail_item,title],(rows,error,result)=>{
@@ -330,38 +331,16 @@ router.post('/updates/item',function(req,res){
  // var _qtys = req.params.qty;
   var _qty=req.body.qty;
   var _title=req.body.title;
- 
 
-   //search if the item exist 
-    var s_item='SELECT * FROM item WHERE title = ? ';
 
-   mysqlConn.conn.query(s_item,[_title],(err,rows,results)=>{
-
-    if (err) {
-
-      console.log(err)
-      return res.send({message:'something went wrong'});
-      
-    } else if(rows.length > 0){
-
-      var u_item='SELECT IF (avail_item >= ? AND 0<=! ? AND ? > -? ,"successful","unsuccessful") "status" FROM item '+
-      ' WHERE title= ?';
-//i_temchk,
-      mysqlConn.conn.query(u_item,[_qty,_qty,_qty,_qty,_title],(err,rows,results)=>{
-        
-        if (!err) {
-
-          res.status(200).send(rows);
-
-          var i_temchk=' UPDATE item SET avail_item = (SELECT avail_item - (IF(avail_item >= ? AND ? > -?, ?, 0)) '+
-                 ' FROM item WHERE title = ?) '+
-                 ' WHERE title = ?';
+          var i_temchk=' UPDATE item SET avail_item = '+
+                 ' FROM item WHERE title = ?) ';
          
-         mysqlConn.conn.query(i_temchk,[_qty,_qty,_qty,_qty,_title,_title],(err,results)=>{
+         mysqlConn.conn.query(i_temchk,[_qty,_title],(err,results)=>{
 
           if(!err)
           {
-            res.status(200);
+            res.status(200).send({message:'successfull updated'});
           }else{
 
             console.log(err);
@@ -369,27 +348,9 @@ router.post('/updates/item',function(req,res){
           }
 
          })
-
-        //  return res.send('');
           
           
-        } else {
-
-          console.log(err);
-          
-        }
-
-      })
-
-    }else {
-
-      return res.send({message: _title +' is not available'});
-      
-    }
-
-   })
-
-})
+        } )
 
 
 
