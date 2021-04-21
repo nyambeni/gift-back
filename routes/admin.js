@@ -3,19 +3,72 @@ const router = express.Router();
 const mysql = require('mysql');
 const mysqlConn = require('../config/conn_db');
 const bodyparser = require('body-parser');
+const { read } = require('fs');
+const multer = require("multer");
+//var router = express.Router();
+(app = express()),
+(path = require('path')),
+(fileUpload = require('express-fileupload')),
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(fileUpload());
 
+const storage = multer.diskStorage({
+  destination :'./uploads',
+  filename : (req , file, cb)=>{
+    //file.fieldname + "-" + Date.now() + path.extname(file.orginalname
+      return cb(null ,`${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+  }
+})
+const upload = multer({storage: storage});
+router.use('/picture',express.static('./uploads'));
+
+//localhost:3000/admin/upload
+router.post('/upload', upload.single('picture'), (req, res) => {
+ 
+  const imagelocation = req.file.path;
+  var  image = `http://localhost:3000/admin/picture/${req.file.filename}`;
+ //profile_url: image;
+   var post=req.body;
+   var category = post.category
+   var item_price = post.item_price;
+   var title =post.title;
+   var size = post.size;
+  //image = post.image;
+   var item_descri = post.item_descri;
+   var avail_item = post.avail_item;
+
+  var sql1= 'INSERT INTO item ( `category`, `item_price`, `size`, `title`, `image`, `item_descri`,`avail_item`)'+
+  ' VALUE(?,?,?,?,? , ? , ? )';
+
+  mysqlConn.conn.query(sql1,[category,item_price, size, title, image ,item_descri,avail_item], (error, results, fields) => {
+      console.log(results);
+      console.log(error);
+      if(error){
+         console.log(error);
+
+      }else{
+          res.json({message:"items successfully added to database"});
+      }
+  });
+});
+function errHandler(err, req, res, next){
+  if(err instanceof MulterError)
+  {
+      res.json({success: 0,
+      message: err,message
+  })
+  }}
 //getting all customer
 //localhost:3000/admin/allcustomer
 router.get("/allcustomer", (req, res) => {
   sql1 = "SELECT * FROM customer";
-  mysqlConn.conn.query(sql1,(results, err) => {
+  mysqlConn.conn.query(sql1, (results, err) => {
     if (err) {
       res.send(err);
     } else {
       console.log(results);
       res.send(results);
-    }
-  });
+    }});
 });
 
 //get Customer By date for the report
@@ -23,22 +76,62 @@ router.get("/allcustomer", (req, res) => {
 router.get("/customer/:date_month", (req, res) => {
   var date_month = req.params.date_month
   sql1 = "SELECT * FROM customer WHERE MONTH(date_created) = ?";
-  mysqlConn.conn.query(sql1,[date_month],(err, results, rows) => {
-    if(!results.length) {
+  mysqlConn.conn.query(sql1, [date_month], (err, results, rows) => {
+    if (!results.length) {
       res.status(404).send("Users not found for that Month");
-        
-    }
-    else
-    {
+
+    } else {
       if (err) {
         console.log(err);
         res.send(err);
       } else {
         console.log(results);
         res.send(results);
-      }
-    }
- });
+      }}
+  });
+});
+
+//get total number of customers who added to wishlist By date for the report
+//localhost:3000/admin/customerWishlist/month
+router.get("/customerWishlist/:date_month", (req, res) => {
+  var date_month = req.params.date_month
+  sql1 = "SELECT * FROM wishlist WHERE MONTH(date_created) = ?";
+  mysqlConn.conn.query(sql1, [date_month], (err, results, rows) => {
+    if (!results.length) {
+      res.status(404).send("Users not found for that Month");
+
+    } else {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        console.log(results);
+        res.send(results);
+      }}
+  });
+});
+
+//get total amount for orders for that month. its for the report
+//localhost:3000/admin/totalAmount/month
+router.get("/totalAmount/:date_month", (req, res) => {
+  var date_month = req.params.date_month
+  sql1 = "SELECT * FROM order_tbl WHERE MONTH(order_date) = ?";
+  mysqlConn.conn.query(sql1, [date_month], (err, results, rows) => {
+    if (!results.length) {
+      res.status(404).send("No Orders found for that Month");
+
+    } else {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        console.log(results);
+        res.send(results);
+        //do calculations to get the total amount of
+
+  
+      }}
+  });
 });
 
 //get Order By date for the report
@@ -46,23 +139,22 @@ router.get("/customer/:date_month", (req, res) => {
 router.get("/order/:date_month", (req, res) => {
   var date_month = req.params.date_month
   sql1 = "SELECT * FROM `order_tbl` WHERE MONTH(order_date) = ?";
-  mysqlConn.conn.query(sql1,[date_month],(err, results, rows) => {
-    if(!results.length) {
+  mysqlConn.conn.query(sql1, [date_month], (err, results, rows) => {
+    if (!results.length) {
       res.status(404).send("Users not found for that Month");
-        
-    }
-    else
-    {
+
+    } else {
       if (err) {
         console.log(err);
         res.send(err);
       } else {
         console.log(results);
+        console.log(results);
         res.send(results);
-      }
-    }
- });
+      }}
+  });
 });
+
 
 //get payment details API
 //localhost:3000/admin/allpayments
@@ -181,55 +273,55 @@ router.post('/upload', (req, res, file) => {
   var size = req.body.size;
   var title = req.body.title;
   var description = req.body.description;
-  var value = [category, price, size, title,description];
-  var sql =
-    'INSERT INTO item( `category`, `item_price`, `size`, `title`,`item_descri`) VALUE(?,?,?,?,?)';
-    mysqlConn.conn.query(sql,value,(err, results) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send({
-          data: value,
-          code: 200,
-          message: "Item added successfully",
-        });
-      }});
+  var value = [category, price, size, title, description];
+  var sql ='INSERT INTO item( `category`, `item_price`, `size`, `title`,`item_descri`) VALUE(?,?,?,?,?)';
+  mysqlConn.conn.query(sql, value, (err, results) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send({
+        data: value,
+        code: 200,
+        message: "Item added successfully",
+      });
+    }
   });
-  
- 
-    //update item/giftboxes in database
+});
+
+//update item/giftboxes in database
 //localhost:3000/admin/updateItem/item_id
-  router.put("/updateItem/:id", (req,res) => {
-    id=req.params.id
-    var category = req.body.category;
-    var price = req.body.price;
-    var size = req.body.size;
-    var title = req.body.title;
-    var description = req.body.description;
-    var value = [category, price, size, title,description, id];
-    
-    var sql = "UPDATE `item` SET  `category` = ?, `item_price`=?,`size`=?,`title`=?,`item_descri`=? WHERE item_id = ?";
+router.put("/updateItem/:id", (req, res) => {
+  id = req.params.id
+  var category = req.body.category;
+  var price = req.body.price;
+  var size = req.body.size;
+  var title = req.body.title;
+  var description = req.body.description;
+  var value = [category, price, size, title, description, id];
 
-    mysqlConn.conn.query(sql,value, function (err, result) {
-      if (err) throw err;
-      console.log(result.affectedRows + " record(s) updated");
-      res.send(result.affectedRows + " record(s) updated");
-    });
+  var sql = "UPDATE `item` SET  `category` = ?, `item_price`=?,`size`=?,`title`=?,`item_descri`=? WHERE item_id = ?";
 
-  })
+  mysqlConn.conn.query(sql, value, function (err, result) {
+    if (err) throw err;
+    console.log(result.affectedRows + " record(s) updated");
+    res.send(result.affectedRows + " record(s) updated");
+  });
+
+})
 
 //getting get a specific customer
 //localhost:3000/admin/allcustomer/id
 router.get("/allcustomer/:id", (req, res) => {
   var cust_id = req.params.id
   sql1 = "SELECT * FROM customer WHERE cust_id = ?";
-  mysqlConn.conn.query(sql1,[cust_id],(err, results, rows) => {
+  mysqlConn.conn.query(sql1, [cust_id], (err, results, rows) => {
     if (err) {
       res.send(err);
     } else {
       console.log(results);
       res.send(results);
-    }});
+    }
+  });
 });
 
 module.exports = router;
