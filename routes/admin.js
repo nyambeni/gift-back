@@ -4,12 +4,67 @@ var auth = require('../controllers/auth');
 var bodyParser = require('body-parser');
 var mysqlConn = require('../config/conn_db');
 const { read } = require('fs');
+const multer = require("multer");
 var router = express.Router();
 (app = express()),
-  (path = require('path')),
-  (fileUpload = require('express-fileupload')),
-  app.use(express.static(path.join(__dirname, 'public')));
+(path = require('path')),
+(fileUpload = require('express-fileupload')),
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUpload());
+
+
+
+
+
+const storage = multer.diskStorage({
+  destination :'./uploads',
+  filename : (req , file, cb)=>{
+    //file.fieldname + "-" + Date.now() + path.extname(file.orginalname
+      return cb(null ,`${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+  }
+})
+
+const upload = multer({storage: storage});
+
+router.use('/picture',express.static('./uploads'));
+
+router.post('/upload', upload.single('picture'), (req, res) => {
+ 
+  const imagelocation = req.file.path;
+  var  image = `http://localhost:3000/admin/picture/${req.file.filename}`;
+ // profile_url: image;
+    var post=req.body;
+   var category = post.category
+   var item_price = post.item_price;
+   var title =post.title;
+   var size = post.size;
+  // image = post.image;
+   var item_descri = post.item_descri;
+   var avail_item = post.avail_item;
+
+  var sql1= 'INSERT INTO item ( `category`, `item_price`, `size`, `title`, `image`, `item_descri`,`avail_item`)'+
+  ' VALUE(?,?,?,?,? , ? , ? )';
+
+  mysqlConn.conn.query(sql1,[category,item_price, size, title, image ,item_descri,avail_item], (error, results, fields) => {
+      console.log(results);
+      console.log(error);
+      if(error){
+
+         console.log(error);
+
+      }else{
+          res.json({message:"items successfully added to database"});
+      }
+  });
+});
+function errHandler(err, req, res, next){
+  if(err instanceof MulterError)
+  {
+      res.json({success: 0,
+      message: err,message
+  })
+  }
+}
 
 //API to Create report
 router.get('/report', (req, res) => {
@@ -69,50 +124,54 @@ router.delete('/deleteItems/:id', (req, res) => {
   });
 });
 
-router.post('/uploadpic', (req, res, file) => {
-  var post = req.body;
-  var category = post.category;
-  var price = post.price;
-  var size = post.size;
-  var title = post.title;
 
-  var img_name = file.name;
 
-  if (
-    file.mimetype == 'image/jpeg' ||
-    file.mimetype == 'image/jpg' ||
-    file.mimetype == 'image/png' ||
-    file.mimetype == 'image/gif'
-  ) {
-    file.mv('public/images/upload_images/' + file.name, function (err) {
-      if (err) return res.status(500).send(err);
-      var sql =
-        'INSERT INTO item( `category`, `item_price`, `size`, `title`, `image`) VALUE(?,?,?,?,?)';
-      var query = mysqlConn.query(sql, function (err, result) {
-        res.send('items added to databse'); //res.redirect('profile/'+result.insertId);
-      });
-    });
-  } else {
-    message =
-      "This format is not allowed , please upload file with '.png', .jpeg, '.gif','.jpg'";
 
-    res.send(message);
-  }
-});
 
-router.post('/upload', (req, res, file) => {
-  var category = req.category;
-  var price = req.price;
-  var size = req.size;
-  var title = req.title;
-  var value = [category,price,size,title];
+// router.post('/uploadpic', (req, res, file) => {
+//   var post = req.body;
+//   var category = post.category;
+//   var price = post.price;
+//   var size = post.size;
+//   var title = post.title;
 
-var sql =
-'INSERT INTO item( `category`, `item_price`, `size`, `title`, `image`) VALUE(?,?,?,?,?)';
-var query = mysqlConn.conn.query(sql,value,function (err, result) {
-res.send('items added to databse'); //res.redirect('profile/'+result.insertId);
-});
-})
+//   var img_name = file.name;
+
+//   if (
+//     file.mimetype == 'image/jpeg' ||
+//     file.mimetype == 'image/jpg' ||
+//     file.mimetype == 'image/png' ||
+//     file.mimetype == 'image/gif'
+//   ) {
+//     file.mv('public/images/upload_images/' + file.name, function (err) {
+//       if (err) return res.status(500).send(err);
+//       var sql =
+//         'INSERT INTO item( `category`, `item_price`, `size`, `title`, `image`) VALUE(?,?,?,?,?)';
+//       var query = mysqlConn.query(sql, function (err, result) {
+//         res.send('items added to databse'); //res.redirect('profile/'+result.insertId);
+//       });
+//     });
+//   } else {
+//     message =
+//       "This format is not allowed , please upload file with '.png', .jpeg, '.gif','.jpg'";
+
+//     res.send(message);
+//   }
+// });
+
+// router.post('/upload', (req, res, file) => {
+//   var category = req.category;
+//   var price = req.price;
+//   var size = req.size;
+//   var title = req.title;
+//   var value = [category,price,size,title];
+
+// var sql =
+// 'INSERT INTO item( `category`, `item_price`, `size`, `title`, `image`) VALUE(?,?,?,?,?)';
+// var query = mysqlConn.conn.query(sql,value,function (err, result) {
+// res.send('items added to databse'); //res.redirect('profile/'+result.insertId);
+// });
+// })
 
 
 //getting all customer

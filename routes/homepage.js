@@ -1,3 +1,11 @@
+const mysql = require("mysql");
+const express = require("express");
+const app = express();
+var cors = require("cors");
+const mysqlConn = require("../config/conn_db");
+const bodyParser = require("body-parser");
+const router = express.Router();
+
 //during recess
 //for homepage
 router.get('/allitems',function(req,res){
@@ -18,3 +26,5 @@ router.get('/allitems',function(req,res){
     })
     
     })
+
+    module.exports = router;

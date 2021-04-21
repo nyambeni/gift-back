@@ -92,9 +92,11 @@ router.put('/avail/item',function(req,res){
   var item_descri=req.body.item_descri;
   var avail_item=req.body.avail_item;
  
-  
-     // var sub='(SELECT avail_item '+'-'+quantity+'FROM item)';
+ var s_items = 'SELECT * FROM items WHERE title= ?'; 
+    mysqlConn.conn.query(s_items,[title],(err,rows)=> {
 
+      if (rows.length > 0 )
+      {
   var items='UPDATE item SET avail_item = ? WHERE title = ? ';
   mysqlConn.conn.query(items,[avail_item,title],(rows,error,result)=>{
 
@@ -107,6 +109,14 @@ router.put('/avail/item',function(req,res){
     }
 
   })
+}
+
+else{
+
+  console.log(err)
+}
+
+})
 
 })
 
@@ -315,11 +325,11 @@ router.post("/payment", (req, res) => {
 
 //during recess
 //update items number of boxes left after purchase
-router.post('/updates/item/:qty/:title',function(req,res){
+router.post('/updates/item',function(req,res){
 
  // var _qtys = req.params.qty;
-  var _qty=req.params.qty;
-  var _title=req.params.title;
+  var _qty=req.body.qty;
+  var _title=req.body.title;
  
 
    //search if the item exist 
@@ -380,35 +390,6 @@ router.post('/updates/item/:qty/:title',function(req,res){
    })
 
 })
-
-
-
-
-
-
-
-
-//during recess
-//for homepage
-router.get('/allitems',function(req,res){
-
-  var items='SELECT *,CASE avail_item WHEN 0 THEN "Not Available"'+
-                                     'ELSE "available" END availability FROM item';
-  
-  mysqlConn.conn.query(items,(err,rows,results)=>{
-    if (!err) {
-  
-      res.send(rows);
-      
-    } else {
-  
-      console.log(error);
-      
-    }
-  })
-  
-  })
-
 
 
 
