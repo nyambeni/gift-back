@@ -234,7 +234,28 @@ router.post("/addcart", (req, res) => {
 
 //delete customer cart
 
+router.delete("/deletecart/:title", (req, res) => {
+  var sQL1 = "DELETE FROM `cart` WHERE `title` = ?";
+  mysqlConn.conn.query(sQL1, [req.params.title], (err, rows, fields) => {
+    if (!err) res.json("Deleted successfully");
+    else console.log(err);
+  });
+});
 
+//view customer cart
+router.get("/viewcart/:custId", function (req, res) {
+  var custId = req.params.custId;
+  var sql1 = "SELECT * FROM `cart` WHERE cust_id = ?";
+  mysqlConn.conn.query(sql1, [custId], (err, rows, results) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    } else {
+      res.json({ data: rows });
+      console.log({ data: results });
+    }
+  });
+});
 
 
 //update items number of boxes left after purchase
