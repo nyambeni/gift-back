@@ -9,7 +9,7 @@ const conn = mysql.createConnection({
     host: 'localhost',
     password:'',
     user:'root', 
-    database: 'gift_box',
+    database: 'giftbox_db',
     JWT_SECRET:'mysuperscretpassword'
 });
 

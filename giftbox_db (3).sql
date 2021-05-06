@@ -29,8 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `admin` (
   `admin_id` int(11) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -50,7 +50,7 @@ CREATE TABLE `cart` (
   `cart_id` int(11) NOT NULL,
   `title` varchar(250) DEFAULT NULL,
   `size` int(11) NOT NULL,
-  `price` double NOT NULL
+  `price` double NOT NULL,
   `description`varchar(250) DEFAULT NULL,
   `cust_id`int(11) NOT NULL,
   `images`varchar(250) DEFAULT NULL
@@ -64,10 +64,10 @@ CREATE TABLE `cart` (
 
 CREATE TABLE `customer` (
   `cust_id` int(11) NOT NULL,
-  `firstname` varchar(100) DEFAULT NULL,
-  `lastname` varchar(100) DEFAULT NULL,
-  `emailAddress` varchar(100) DEFAULT NULL,
-  `password` varchar(100) DEFAULT NULL
+  `firstname` varchar(255) DEFAULT NULL,
+  `lastname` varchar(255) DEFAULT NULL,
+  `emailAddress` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -218,8 +218,7 @@ ALTER TABLE `admin`
 --
 ALTER TABLE `cart`
   ADD PRIMARY KEY (`cart_id`),
-  ADD KEY `item_id` (`item_id`),
-  ADD KEY `order_id` (`order_id`);
+  ADD KEY `cust_id` (`cust_id`);
 
 --
 -- Indexes for table `customer`
@@ -333,6 +332,11 @@ ALTER TABLE `payment`
 --
 ALTER TABLE `wishlist`
   ADD CONSTRAINT `wishlist_ibfk_2` FOREIGN KEY (`cust_id`) REFERENCES `customer` (`cust_id`);
+
+ALTER TABLE `cart`
+  ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`cust_id`) REFERENCES `customer` (`cust_id`);
+
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -191,6 +191,52 @@ router.get("/viewWishlist/:custId", function (req, res) {
   });
 });
 
+//customer cart
+
+router.post("/addcart", (req, res) => {
+  const {
+    title,
+    price,
+    cust_id,
+    description,
+    size,
+    images,
+  } = req.body;
+
+  const cart = "SELECT * FROM cart WHERE title=? AND cust_id= ? ";
+  mysqlConn.conn.query(cart, [title,cust_id], (error, rows) => {
+    if (error) {
+      console.log(error);
+    }
+    if (rows.length > 0) {
+      return res.status(401).send("item already added to cart");
+    } else {
+      // INSERT INTO `wishlist`(`wish_id`, `item_title`, `price`, `admin_id`
+      const values = {
+        title: title,
+        price: price,
+        cust_id: cust_id,
+        description:description,
+        size: size,
+        images: images,
+      };
+      const query1 = "INSERT INTO cart SET ? ";
+      mysqlConn.conn.query(query1, [values], (error, results) => {
+        if (error) {
+          console.log(error);
+        } else {
+          res.status(200).send({ data: values, message: "added to cart" });
+        }
+      });
+    }
+  });
+});
+
+//delete customer cart
+
+
+
+
 //update items number of boxes left after purchase
 router.put('/update/bought_item/:title',function(req,res){
 

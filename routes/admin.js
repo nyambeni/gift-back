@@ -128,52 +128,6 @@ router.delete('/deleteItems/:id', (req, res) => {
 
 
 
-// router.post('/uploadpic', (req, res, file) => {
-//   var post = req.body;
-//   var category = post.category;
-//   var price = post.price;
-//   var size = post.size;
-//   var title = post.title;
-
-//   var img_name = file.name;
-
-//   if (
-//     file.mimetype == 'image/jpeg' ||
-//     file.mimetype == 'image/jpg' ||
-//     file.mimetype == 'image/png' ||
-//     file.mimetype == 'image/gif'
-//   ) {
-//     file.mv('public/images/upload_images/' + file.name, function (err) {
-//       if (err) return res.status(500).send(err);
-//       var sql =
-//         'INSERT INTO item( `category`, `item_price`, `size`, `title`, `image`) VALUE(?,?,?,?,?)';
-//       var query = mysqlConn.query(sql, function (err, result) {
-//         res.send('items added to databse'); //res.redirect('profile/'+result.insertId);
-//       });
-//     });
-//   } else {
-//     message =
-//       "This format is not allowed , please upload file with '.png', .jpeg, '.gif','.jpg'";
-
-//     res.send(message);
-//   }
-// });
-
-// router.post('/upload', (req, res, file) => {
-//   var category = req.category;
-//   var price = req.price;
-//   var size = req.size;
-//   var title = req.title;
-//   var value = [category,price,size,title];
-
-// var sql =
-// 'INSERT INTO item( `category`, `item_price`, `size`, `title`, `image`) VALUE(?,?,?,?,?)';
-// var query = mysqlConn.conn.query(sql,value,function (err, result) {
-// res.send('items added to databse'); //res.redirect('profile/'+result.insertId);
-// });
-// })
-
-
 //getting all customer
 
 router.get("/allcustomer", (req, res) => {
