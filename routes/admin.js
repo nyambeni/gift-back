@@ -1,57 +1,140 @@
-const express = require('express');
-const router = express.Router();
-const mysql = require('mysql');
-const mysqlConn = require('../config/conn_db');
-const bodyparser = require('body-parser');
+var mysql = require('mysql');
+var express = require('express');
+var auth = require('../controllers/auth');
+var bodyParser = require('body-parser');
+var mysqlConn = require('../config/conn_db');
+const { read } = require('fs');
+const multer = require("multer");
+var router = express.Router();
+(app = express()),
+(path = require('path')),
+(fileUpload = require('express-fileupload')),
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(fileUpload());
 
-//getting all customer
-//localhost:3000/admin/allcustomer
-router.get("/allcustomer", (req, res) => {
-  sql1 = "SELECT firstname,lastname,emailAddress FROM customer";
-  mysqlConn.conn.query(sql1, (rows, results, error) => {
-    try {
-      res.send({
-        data: results
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  });
-});
 
-//get payment details API
-//localhost:3000/admin/allpayments
-router.get("/allpayments", (req, res) => {
-  payments =
-    "SELECT a.firstname,a.lastname, b.* FROM order_tbl b,customer a WHERE a.cust_id=b.cust_id ";
-  mysqlConn.conn.query(payments, (rows, results, error) => {
-    try {
-      res.send({
-        data: results
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  });
-});
 
-//get report
-//localhost:3000/admin/report
-router.get('/report', (req, res) => {
-  fs = require('fs');
-  fs.writeFile(
-    './report/report.txt',
-    'Hello This is the MONTHLY Report...!',
-    'utf8',
-    function (err) {
-      if (err) return console.log(err);
-      console.log('Report written!!');
-    }
-  );
-});
 
 //API to get items
-//localhost:3000/admin/viewItems
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+  }
+})
+
+const upload = multer({ storage: storage });
+
+
+router.post('/uploadItem', upload.single('picture'), (req, res) => {
+
+  var image = `http://localhost:3000/admin/uploads/${req.file.filename}`;
+  // profile_url: image;
+  var post = req.body;
+  var category = post.category
+  var item_price = post.price;
+  var title = post.title;
+  var size = post.size;
+  // image = post.image;
+  var item_descri = post.description;
+  var avail_item = post.quantity;
+
+  console.log('-------------------------');
+  console.log(image);
+  console.log('-------------------------');
+
+  const sql = 'INSERT INTO item ( `category`, `item_price`, `size`, `title`, `image`, `item_descri`,`avail_item`)' +
+    ' VALUE(?,?,?,?,? , ? , ? )';
+
+  mysqlConn.conn.query(sql,[category,item_price, size, title, image ,item_descri,avail_item], (error, results, fields) => {
+    console.log(results);
+    console.log(error);
+    if (error) {
+      res.json({ 'error': error })
+    } else {
+      res.json({ 'msg': 'Successesful' });
+    }
+  });
+});
+
+//API to view all items
+router.use('/uploads', express.static('uploads'));
+router.get('/viewItems', (req, res) => {
+  const sql = "SELECT * FROM item";
+
+  mysqlConn.conn.query(sql, (error, results, fields) => {
+    /* res.json({
+         item_id: results.id,
+         category: results.category,
+         item_price: results. item_price,
+         request: {
+             type: 'GET',
+             url: "http://localhost:3000/" + p.jpg
+         }
+
+     }); */
+    if (error) {
+      res.send(error);
+    } else {
+      console.log(results);
+      res.json(results);
+    }
+  });
+});
+
+//API to Create report
+//get Customer By date for the report
+//localhost:3000/admin/customer/month
+router.get("/customer/:date_month", (req, res) => {
+  var date_month = req.params.date_month
+  sql1 = "SELECT * FROM customer WHERE MONTH(date_created) = ?";
+  mysqlConn.conn.query(sql1,[date_month],(err, results, rows) => {
+    console.log("You info to the api cusomter");
+    if(!results) {
+      res.send("Users not found for that Month");
+        
+    }
+    else
+    {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        console.log(results);
+        res.send(results);
+      }
+    }
+ });
+});
+
+//get Order By date for the report
+//localhost:3000/admin/order/month
+router.get("/order/:date_month", (req, res) => {
+  var date_month = req.params.date_month
+  sql1 = "SELECT * FROM `order_tbl` WHERE MONTH(order_date) = ?";
+  
+  mysqlConn.conn.query(sql1,[date_month],(err, results, rows) => {
+    if(!results) {
+      res.send("Users not found for that Month");
+        
+    }
+    else
+    {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        console.log(results);
+        res.send(results);
+      }
+    }
+ });
+});
+
+
+//API to get items
 router.get('/viewItems', (req, res) => {
   var item_category = req.body.category;
   var query = 'SELECT * FROM item';
@@ -66,7 +149,6 @@ router.get('/viewItems', (req, res) => {
 });
 
 //API to view items by category
-//localhost:3000/admin/viewItem/category
 router.get('/viewItem/:category', (req, res) => {
   var item_category = req.params.category;
   var query = 'SELECT * FROM item WHERE category = ?';
@@ -81,7 +163,6 @@ router.get('/viewItem/:category', (req, res) => {
 });
 
 //delete giftbox
-//localhost:3000/admin/deleteItems/id
 router.delete('/deleteItems/:id', (req, res) => {
   var id = req.params.id;
   var sql = 'DELETE FROM `item` WHERE item_id = ?';
@@ -96,96 +177,73 @@ router.delete('/deleteItems/:id', (req, res) => {
   });
 });
 
-//upload giftbox item pic
-//localhost:3000/admin/uploadpic
-router.post('/uploadpic', (req, res, file) => {
-  var post = req.body;
-  var category = post.category;
-  var price = post.price;
-  var size = post.size;
-  var title = post.title;
 
-  var img_name = file.name;
 
-  if (
-    file.mimetype == 'image/jpeg' ||
-    file.mimetype == 'image/jpg' ||
-    file.mimetype == 'image/png' ||
-    file.mimetype == 'image/gif'
-  ) {
-    file.mv('public/images/upload_images/' + file.name, function (err) {
-      if (err) return res.status(500).send(err);
-      var sql =
-        'INSERT INTO item( `category`, `item_price`, `size`, `title`, `image`) VALUE(?,?,?,?,?)';
-      var query = mysqlConn.query(sql, function (err, result) {
-        res.send('items added to databse'); //res.redirect('profile/'+result.insertId);
-      });
-    });
-  } else {
-    message =
-      "This format is not allowed , please upload file with '.png', .jpeg, '.gif','.jpg'";
 
-    res.send(message);
-  }
+
+//getting all customer
+
+router.get("/allcustomer", (req, res) => {
+  sql1 = "SELECT cust_id ,firstname,lastname,emailAddress FROM customer";
+  mysqlConn.conn.query(sql1, (rows, rma, error) => {
+    try {
+      res.json(rma);
+    } catch (error) {
+      console.log(error);
+    }
+  });
 });
-//upload giftbox item details
-//localhost:3000/admin/upload
-router.post('/upload', (req, res, file) => {
+
+
+
+
+//view all payments/ orders
+router.get("/payments", (req, res) => {
+  payments =
+    "SELECT a.firstname,a.lastname, b.* FROM order_tbl b,customer a WHERE a.cust_id=b.cust_id ";
+  //+ Options
+  mysqlConn.conn.query(payments, (rows, results, error) => {
+    try {
+      res.json(results);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+});
+
+//api to update  items
+router.put('/update/items/:item_id', function (req, res) {
+
+  var item_id = req.body.item_id;
+
+  //var item_id =req.body.item_id;
   var category = req.body.category;
-  var price = req.body.price;
+  var item_price = req.body.item_price;
   var size = req.body.size;
   var title = req.body.title;
-  var description = req.body.description;
-  var value = [category, price, size, title,description];
-  var sql =
-    'INSERT INTO item( `category`, `item_price`, `size`, `title`,`item_descri`) VALUE(?,?,?,?,?)';
-    mysqlConn.conn.query(sql,value,(err, results) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send({
-          data: value,
-          code: 200,
-          message: "Item added successfully",
-        });
-      }});
-  });
-  
-/** 
-  //update item/giftboxes in database
-//localhost:3000/admin/updateItem/item_id
-  router.put("/updateItem/:id", (req,res) => {
-    id=req.params.id
-    var category = req.body.category;
-    var price = req.body.price;
-    var size = req.body.size;
-    var title = req.body.title;
-    var description = req.body.description;
-    var value = [category, price, size, title,description, id];
-    
-    var sql = "UPDATE `item` SET  `category` = ?, `item_price`=?,`size`=?,`title`=?,`image`=?,`item_descri`=? WHERE item_id = ?";
+  //var image=req.body.image;
+  var item_descri = req.body.item_descri;
+  var avail_item = req.body.avail_item;
 
-    mysqlConn.conn.query(sql,value, function (err, result) {
-      if (err) throw err;
-      console.log(result.affectedRows + " record(s) updated");
-      res.send(result.affectedRows + " record(s) updated");
-    });
 
-  })**/
- 
 
-//getting get a specific customer
-//localhost:3000/admin/allcustomer/id
-router.get("/allcustomer/:id", (req, res) => {
-  var cust_id = req.params.id
-  sql1 = "SELECT * FROM customer WHERE cust_id = ?";
-  mysqlConn.conn.query(sql1,[cust_id],(err, results, rows) => {
-    if (err) {
-      res.send(err);
+  var items = 'UPDATE item SET category = ?,item_price = ?,size =?,title = ?,item_descri = ?, avail_item = ? WHERE item_id = ? ';
+  mysqlConn.conn.query(items, [category, item_price, size, title, item_descri,avail_item, req.params.item_id], (err, rows) => {
+
+    if (!err) {
+      console.log(rows);
+      res.send({ message: 'successfully updated' })
+
     } else {
-      console.log(results);
-      res.send(results);
-    }});
-});
+      console.log(error);
+      console.log({ message: 'error detected' })
+
+    }
+
+  })
+
+})
+
+
 
 module.exports = router;
